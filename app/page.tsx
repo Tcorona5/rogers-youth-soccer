@@ -102,18 +102,17 @@ export default function HomePage() {
           <div style={{ flex: 1, background: '#006847' }} />
           <div style={{ flex: 1, background: '#D80027' }} />
         </div>
-        <div style={{ background: '#0033A0' }} className="px-4 py-5">
+        <div style={{ background: '#ffffff' }} className="px-4 py-5">
           <div className="max-w-5xl mx-auto flex items-center gap-3">
             <div className="text-3xl">⚽</div>
             <div>
-              <h1 className="text-white font-bold text-xl leading-tight">Rogers Youth Soccer</h1>
-              <p style={{ color: '#C8A84B' }} className="text-sm font-medium tracking-wide">
-                🌍 Spring 2026 · World Cup Season
+              <h1 className="font-bold text-xl leading-tight" style={{ color: '#0A1628' }}>Rogers Youth Soccer</h1>
+              <p style={{ color: '#0033A0' }} className="text-sm font-medium tracking-wide">
+                Spring 2026
               </p>
             </div>
             <div className="ml-auto text-right hidden sm:block">
-              <p className="text-gray-400 text-xs">Rogers Community-School</p>
-              <p className="text-gray-400 text-xs">Recreation Association</p>
+              <p className="text-xs font-medium" style={{ color: '#0A1628' }}>Rogers Activity Center</p>
             </div>
           </div>
         </div>
@@ -154,8 +153,8 @@ export default function HomePage() {
 
       <footer style={{ background: '#0A1628' }} className="mt-12 py-6">
         <div className="max-w-5xl mx-auto px-4 text-center">
-          <p className="text-gray-400 text-sm">Rogers Community-School Recreation Association · Spring 2026</p>
-          <p className="text-gray-500 text-xs mt-1">For questions contact Rogers Parks &amp; Recreation</p>
+          <p className="text-white text-sm font-medium">Rogers Activity Center · Spring 2026</p>
+          <p className="text-red-200 text-xs mt-1">For questions contact Rogers Parks &amp; Recreation</p>
         </div>
       </footer>
     </div>
@@ -176,9 +175,9 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
       {/* Table header bar */}
-      <div className="px-6 py-4 border-b border-gray-200" style={{ background: '#0A1628' }}>
+      <div className="px-6 py-4 border-b border-gray-200" style={{ background: '#D80027' }}>
         <h2 className="text-white font-bold text-sm tracking-widest uppercase">Standings</h2>
-        <p className="text-gray-400 text-xs mt-0.5">Win 3 pts · Draw 1 pt · Loss 0 pts</p>
+        <p className="text-red-200 text-xs mt-0.5">Win 3 pts · Draw 1 pt · Loss 0 pts</p>
       </div>
 
       <div className="overflow-x-auto">
@@ -245,7 +244,7 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
 function ResultsTable({ completed }: { completed: Game[] }) {
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-      <div className="px-6 py-4 border-b border-gray-200" style={{ background: '#0A1628' }}>
+      <div className="px-6 py-4 border-b border-gray-200" style={{ background: '#006847' }}>
         <h2 className="text-white font-bold text-sm tracking-widest uppercase">Results</h2>
       </div>
       <div>
