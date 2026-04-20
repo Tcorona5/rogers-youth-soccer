@@ -15,6 +15,8 @@ const DIVISIONS: Division[] = [
   { slug: 'u18',  display_name: 'U18 Co-Ed',      sort_order: 10 },
 ]
 
+const ROGERS_GREEN = '#2D7A3A'
+
 function flagEmojiToCode(emoji: string): string {
   if (!emoji) return ''
   try {
@@ -94,46 +96,36 @@ export default function HomePage() {
     .sort((a, b) => (b.game_date || '').localeCompare(a.game_date || ''))
 
   return (
-    <div className="min-h-screen" style={{ background: '#f1f5f9' }}>
-      {/* Header — tricolor stripe + navy body */}
-      <header className="shadow-lg">
-        <div style={{ display: 'flex', height: '7px' }}>
-          <div style={{ flex: 1, background: '#0033A0' }} />
-          <div style={{ flex: 1, background: '#006847' }} />
-          <div style={{ flex: 1, background: '#D80027' }} />
-        </div>
-        <div style={{ background: '#ffffff' }} className="px-4 py-5">
-          <div className="max-w-5xl mx-auto flex items-center gap-3">
-            <div className="text-3xl">⚽</div>
-            <div>
-              <h1 className="font-bold text-xl leading-tight" style={{ color: '#0A1628' }}>Rogers Youth Soccer</h1>
-              <p style={{ color: '#0033A0' }} className="text-sm font-medium tracking-wide">
-                Spring 2026
-              </p>
-            </div>
-            <div className="ml-auto text-right hidden sm:block">
-              <p className="text-xs font-medium" style={{ color: '#0A1628' }}>Rogers Activity Center</p>
-            </div>
+    <div className="min-h-screen" style={{ background: '#f8fafc' }}>
+
+      {/* Navbar — Rogers green, clean like adult site */}
+      <header style={{ background: ROGERS_GREEN }} className="shadow-md">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-white font-bold text-2xl tracking-tight">Rogers Youth Soccer</h1>
+            <p className="text-green-200 text-sm mt-0.5">Spring 2026 · Rogers Activity Center</p>
+          </div>
+          <div className="text-right hidden sm:block">
+            <span className="text-green-200 text-sm">🌍 World Cup Season</span>
           </div>
         </div>
       </header>
-      <div style={{ background: '#C8A84B', height: '3px' }} />
 
-      <div className="max-w-5xl mx-auto px-4 py-6">
-        {/* Division Tabs */}
-        <div className="mb-6">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Division</p>
+      <div className="max-w-5xl mx-auto px-6 py-8">
+
+        {/* Division selector */}
+        <div className="mb-8">
           <div className="flex gap-2 flex-wrap">
             {DIVISIONS.map(d => (
               <button
                 key={d.slug}
                 onClick={() => setActiveDiv(d.slug)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
+                className="px-4 py-2 rounded-full text-sm font-semibold transition-all"
+                style={
                   activeDiv === d.slug
-                    ? 'text-white border-transparent shadow-md'
-                    : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
-                }`}
-                style={activeDiv === d.slug ? { background: '#007A87', borderColor: '#007A87' } : {}}
+                    ? { background: ROGERS_GREEN, color: 'white', boxShadow: '0 2px 8px rgba(45,122,58,0.3)' }
+                    : { background: 'white', color: '#374151', border: '1px solid #d1d5db' }
+                }
               >
                 {d.display_name}
               </button>
@@ -142,19 +134,20 @@ export default function HomePage() {
         </div>
 
         {loading ? (
-          <div className="text-center py-16 text-gray-400">Loading…</div>
+          <div className="text-center py-20 text-gray-400 text-sm">Loading…</div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <StandingsTable standings={standings} />
             {completed.length > 0 && <ResultsTable completed={completed} />}
           </div>
         )}
       </div>
 
-      <footer style={{ background: '#D80027' }} className="mt-12 py-6">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <p className="text-white text-sm font-medium">Rogers Activity Center · Spring 2026</p>
-          <p className="text-red-200 text-xs mt-1">For questions contact Rogers Parks &amp; Recreation</p>
+      {/* Footer */}
+      <footer style={{ background: ROGERS_GREEN }} className="mt-12 py-5">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <p className="text-green-100 text-sm">Rogers Activity Center · Spring 2026</p>
+          <p className="text-green-300 text-xs mt-1">For questions contact Rogers Parks &amp; Recreation</p>
         </div>
       </footer>
     </div>
@@ -164,36 +157,55 @@ export default function HomePage() {
 function StandingsTable({ standings }: { standings: StandingsRow[] }) {
   if (standings.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-10 text-center shadow-sm">
-        <div className="text-4xl mb-3">⚽</div>
-        <p className="text-gray-500 font-medium">No results recorded yet</p>
+      <div className="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
+        <div className="text-5xl mb-4">⚽</div>
+        <p className="text-gray-600 font-semibold">No results recorded yet</p>
         <p className="text-gray-400 text-sm mt-1">Standings will appear once games are played</p>
       </div>
     )
   }
 
+  const cellStyle = (extra?: object) => ({
+    textAlign: 'center' as const,
+    padding: '18px 8px',
+    fontSize: '14px',
+    ...extra,
+  })
+
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-      {/* Table header bar */}
-      <div className="px-6 py-4 border-b border-gray-200" style={{ background: '#0033A0' }}>
-        <h2 className="text-white font-bold text-sm tracking-widest uppercase">Standings</h2>
-        <p className="text-blue-200 text-xs mt-0.5">Win 3 pts · Draw 1 pt · Loss 0 pts</p>
+    <div className="bg-white rounded-xl shadow-sm overflow-hidden" style={{ border: '1px solid #e5e7eb' }}>
+      {/* Header bar */}
+      <div className="px-6 py-4" style={{ background: ROGERS_GREEN }}>
+        <h2 className="text-white font-bold text-lg">Standings</h2>
+        <p className="text-green-200 text-xs mt-0.5">Win 3 pts · Draw 1 pt · Loss 0 pts</p>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full table-fixed">
+        <table className="w-full" style={{ tableLayout: 'fixed' }}>
+          <colgroup>
+            <col style={{ width: '48px' }} />
+            <col />
+            <col style={{ width: '64px' }} />
+            <col style={{ width: '64px' }} />
+            <col style={{ width: '64px' }} />
+            <col style={{ width: '64px' }} />
+            <col style={{ width: '72px' }} />
+            <col style={{ width: '72px' }} />
+            <col style={{ width: '72px' }} />
+            <col style={{ width: '72px' }} />
+          </colgroup>
           <thead>
-            <tr style={{ background: '#f8fafc', borderBottom: '2px solid #cbd5e1' }}>
-              <th className="text-left py-4 pl-6 pr-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '52px' }}>#</th>
-              <th className="text-left py-4 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Team</th>
-              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>P</th>
-              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#16a34a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>W</th>
-              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>D</th>
-              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#dc2626', textTransform: 'uppercase', letterSpacing: '0.05em' }}>L</th>
-              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>GF</th>
-              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>GA</th>
-              <th style={{ textAlign: 'center', width: '80px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>GD</th>
-              <th style={{ textAlign: 'center', width: '80px', padding: '16px 8px 16px 8px', fontSize: '12px', fontWeight: 700, color: '#007A87', textTransform: 'uppercase', letterSpacing: '0.05em' }}>PTS</th>
+            <tr style={{ background: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
+              <th style={{ padding: '12px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>#</th>
+              <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Team</th>
+              <th style={{ padding: '12px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>P</th>
+              <th style={{ padding: '12px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 700, color: '#16a34a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>W</th>
+              <th style={{ padding: '12px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>D</th>
+              <th style={{ padding: '12px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 700, color: '#dc2626', textTransform: 'uppercase', letterSpacing: '0.08em' }}>L</th>
+              <th style={{ padding: '12px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>GF</th>
+              <th style={{ padding: '12px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>GA</th>
+              <th style={{ padding: '12px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>GD</th>
+              <th style={{ padding: '12px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 700, color: ROGERS_GREEN, textTransform: 'uppercase', letterSpacing: '0.08em' }}>PTS</th>
             </tr>
           </thead>
           <tbody>
@@ -201,30 +213,27 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
               <tr
                 key={row.team}
                 style={{
-                  borderBottom: '1px solid #e2e8f0',
+                  borderBottom: '1px solid #f3f4f6',
                   background: i === 0 ? '#f0fdf4' : 'white',
                 }}
-                className="hover:bg-slate-50 transition-colors"
               >
-                <td className="py-5 text-sm font-semibold text-gray-400" style={{ textAlign: 'center', width: '52px' }}>{i + 1}</td>
-                <td className="py-5 px-4">
+                <td style={{ ...cellStyle(), color: '#9ca3af', fontWeight: 600 }}>{i + 1}</td>
+                <td style={{ padding: '18px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <FlagImg emoji={row.flag} size={26} />
-                    <span className="font-semibold text-gray-800">{row.team}</span>
+                    <span style={{ fontWeight: 600, color: '#111827', fontSize: '14px' }}>{row.team}</span>
                   </div>
                 </td>
-                <td style={{ textAlign: 'center', fontSize: '14px', color: '#4b5563', fontWeight: 500 }}>{row.gp}</td>
-                <td style={{ textAlign: 'center', fontSize: '14px', color: '#16a34a', fontWeight: 700 }}>{row.w}</td>
-                <td style={{ textAlign: 'center', fontSize: '14px', color: '#6b7280', fontWeight: 500 }}>{row.d}</td>
-                <td style={{ textAlign: 'center', fontSize: '14px', color: row.l > 0 ? '#dc2626' : '#9ca3af', fontWeight: 700 }}>{row.l}</td>
-                <td style={{ textAlign: 'center', fontSize: '14px', color: '#4b5563', fontWeight: 500 }}>{row.gf}</td>
-                <td style={{ textAlign: 'center', fontSize: '14px', color: '#4b5563', fontWeight: 500 }}>{row.ga}</td>
-                <td style={{ textAlign: 'center', fontSize: '14px', fontWeight: 600, color: row.gd > 0 ? '#16a34a' : row.gd < 0 ? '#dc2626' : '#9ca3af' }}>
+                <td style={{ ...cellStyle(), color: '#6b7280', fontWeight: 500 }}>{row.gp}</td>
+                <td style={{ ...cellStyle(), color: '#16a34a', fontWeight: 700 }}>{row.w}</td>
+                <td style={{ ...cellStyle(), color: '#9ca3af', fontWeight: 500 }}>{row.d}</td>
+                <td style={{ ...cellStyle(), color: row.l > 0 ? '#dc2626' : '#9ca3af', fontWeight: 700 }}>{row.l}</td>
+                <td style={{ ...cellStyle(), color: '#6b7280', fontWeight: 500 }}>{row.gf}</td>
+                <td style={{ ...cellStyle(), color: '#6b7280', fontWeight: 500 }}>{row.ga}</td>
+                <td style={{ ...cellStyle(), color: row.gd > 0 ? '#16a34a' : row.gd < 0 ? '#dc2626' : '#9ca3af', fontWeight: 600 }}>
                   {row.gd > 0 ? `+${row.gd}` : row.gd}
                 </td>
-                <td style={{ textAlign: 'center', paddingRight: '24px' }}>
-                  <span style={{ fontSize: '15px', fontWeight: 900, color: '#0A1628' }}>{row.pts}</span>
-                </td>
+                <td style={{ ...cellStyle(), fontWeight: 900, fontSize: '15px', color: '#111827' }}>{row.pts}</td>
               </tr>
             ))}
           </tbody>
@@ -232,8 +241,8 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
       </div>
 
       {/* Legend */}
-      <div className="px-6 py-3 border-t border-gray-100" style={{ background: '#f8fafc' }}>
-        <p className="text-xs text-gray-400 text-center">
+      <div style={{ padding: '12px 24px', background: '#f9fafb', borderTop: '1px solid #e5e7eb' }}>
+        <p style={{ fontSize: '11px', color: '#9ca3af', textAlign: 'center' }}>
           P = Played &nbsp;·&nbsp; W = Won &nbsp;·&nbsp; D = Draw &nbsp;·&nbsp; L = Lost &nbsp;·&nbsp; GF = Goals For &nbsp;·&nbsp; GA = Goals Against &nbsp;·&nbsp; GD = Goal Difference &nbsp;·&nbsp; PTS = Points
         </p>
       </div>
@@ -243,43 +252,46 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
 
 function ResultsTable({ completed }: { completed: Game[] }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-      <div className="px-6 py-4 border-b border-gray-200" style={{ background: '#006847' }}>
-        <h2 className="text-white font-bold text-sm tracking-widest uppercase">Results</h2>
+    <div className="bg-white rounded-xl shadow-sm overflow-hidden" style={{ border: '1px solid #e5e7eb' }}>
+      <div className="px-6 py-4" style={{ background: ROGERS_GREEN }}>
+        <h2 className="text-white font-bold text-lg">Results</h2>
       </div>
       <div>
-        {completed.map(g => {
+        {completed.map((g, idx) => {
           const homeWon = (g.home_score ?? 0) > (g.away_score ?? 0)
           const awayWon = (g.away_score ?? 0) > (g.home_score ?? 0)
           return (
-            <div key={g.id} className="px-6 py-4" style={{ borderBottom: '1px solid #e2e8f0' }}>
-              <p className="text-xs text-gray-400 mb-2">
+            <div
+              key={g.id}
+              style={{ borderBottom: idx < completed.length - 1 ? '1px solid #f3f4f6' : 'none', padding: '16px 24px' }}
+            >
+              <p style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '8px' }}>
                 {formatDate(g.game_date, g.game_time)}{g.field ? ` · ${g.field}` : ''}
               </p>
-              <div className="flex items-center gap-4">
-                {/* Home team */}
-                <div className={`flex items-center gap-2 flex-1 ${homeWon ? '' : 'opacity-60'}`}>
-                  <FlagImg emoji={g.home_flag} size={20} />
-                  <span className={`text-sm ${homeWon ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                {/* Home */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, opacity: homeWon ? 1 : 0.5 }}>
+                  <FlagImg emoji={g.home_flag} size={22} />
+                  <span style={{ fontSize: '14px', fontWeight: homeWon ? 700 : 500, color: homeWon ? '#111827' : '#6b7280' }}>
                     {g.home_team}
                   </span>
                 </div>
                 {/* Score */}
-                <div className="flex items-center gap-2 shrink-0 px-3 py-1 rounded-lg" style={{ background: '#f1f5f9' }}>
-                  <span className={`text-lg font-black w-6 text-center ${homeWon ? 'text-gray-900' : 'text-gray-400'}`}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#f3f4f6', padding: '6px 14px', borderRadius: '8px' }}>
+                  <span style={{ fontSize: '18px', fontWeight: 900, color: homeWon ? '#111827' : '#9ca3af', minWidth: '20px', textAlign: 'center' }}>
                     {g.home_score}
                   </span>
-                  <span className="text-gray-300 text-sm">–</span>
-                  <span className={`text-lg font-black w-6 text-center ${awayWon ? 'text-gray-900' : 'text-gray-400'}`}>
+                  <span style={{ color: '#d1d5db', fontSize: '14px' }}>–</span>
+                  <span style={{ fontSize: '18px', fontWeight: 900, color: awayWon ? '#111827' : '#9ca3af', minWidth: '20px', textAlign: 'center' }}>
                     {g.away_score}
                   </span>
                 </div>
-                {/* Away team */}
-                <div className={`flex items-center gap-2 flex-1 justify-end ${awayWon ? '' : 'opacity-60'}`}>
-                  <span className={`text-sm ${awayWon ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>
+                {/* Away */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, justifyContent: 'flex-end', opacity: awayWon ? 1 : 0.5 }}>
+                  <span style={{ fontSize: '14px', fontWeight: awayWon ? 700 : 500, color: awayWon ? '#111827' : '#6b7280' }}>
                     {g.away_team}
                   </span>
-                  <FlagImg emoji={g.away_flag} size={20} />
+                  <FlagImg emoji={g.away_flag} size={22} />
                 </div>
               </div>
             </div>
