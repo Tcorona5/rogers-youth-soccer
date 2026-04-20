@@ -15,6 +15,29 @@ const DIVISIONS: Division[] = [
   { slug: 'u18',  display_name: 'U18 Co-Ed',      sort_order: 10 },
 ]
 
+function flagEmojiToCode(emoji: string): string {
+  if (!emoji) return ''
+  try {
+    const codePoints = [...emoji].map(c => c.codePointAt(0)! - 0x1F1E6)
+    if (codePoints.length < 2 || codePoints[0] < 0 || codePoints[1] < 0) return ''
+    return String.fromCharCode(65 + codePoints[0], 65 + codePoints[1]).toLowerCase()
+  } catch { return '' }
+}
+
+function FlagImg({ emoji, size = 22 }: { emoji: string; size?: number }) {
+  const code = flagEmojiToCode(emoji)
+  if (!code) return null
+  return (
+    <img
+      src={`https://flagcdn.com/w40/${code}.png`}
+      alt={code.toUpperCase()}
+      width={size}
+      height={Math.round(size * 0.67)}
+      style={{ objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }}
+    />
+  )
+}
+
 function computeStandings(games: Game[]): StandingsRow[] {
   const map: Record<string, StandingsRow> = {}
   const ensure = (team: string, flag: string) => {
@@ -71,8 +94,8 @@ export default function HomePage() {
     .sort((a, b) => (b.game_date || '').localeCompare(a.game_date || ''))
 
   return (
-    <div className="min-h-screen" style={{ background: '#f8fafc' }}>
-      {/* Header — USA blue / Mexico green / Canada red tricolor stripes + navy body */}
+    <div className="min-h-screen" style={{ background: '#f1f5f9' }}>
+      {/* Header — tricolor stripe + navy body */}
       <header className="shadow-lg">
         <div style={{ display: 'flex', height: '7px' }}>
           <div style={{ flex: 1, background: '#0033A0' }} />
@@ -95,8 +118,6 @@ export default function HomePage() {
           </div>
         </div>
       </header>
-
-      {/* Gold accent bar */}
       <div style={{ background: '#C8A84B', height: '3px' }} />
 
       <div className="max-w-5xl mx-auto px-4 py-6">
@@ -125,31 +146,26 @@ export default function HomePage() {
           <div className="text-center py-16 text-gray-400">Loading…</div>
         ) : (
           <div className="space-y-6">
-            <StandingsView standings={standings} />
-            {completed.length > 0 && <ResultsView completed={completed} />}
+            <StandingsTable standings={standings} />
+            {completed.length > 0 && <ResultsTable completed={completed} />}
           </div>
         )}
       </div>
 
-      {/* Footer */}
       <footer style={{ background: '#0A1628' }} className="mt-12 py-6">
         <div className="max-w-5xl mx-auto px-4 text-center">
-          <p className="text-gray-400 text-sm">
-            Rogers Community-School Recreation Association · Spring 2026
-          </p>
-          <p className="text-gray-500 text-xs mt-1">
-            For questions contact Rogers Parks &amp; Recreation
-          </p>
+          <p className="text-gray-400 text-sm">Rogers Community-School Recreation Association · Spring 2026</p>
+          <p className="text-gray-500 text-xs mt-1">For questions contact Rogers Parks &amp; Recreation</p>
         </div>
       </footer>
     </div>
   )
 }
 
-function StandingsView({ standings }: { standings: StandingsRow[] }) {
+function StandingsTable({ standings }: { standings: StandingsRow[] }) {
   if (standings.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-10 text-center">
+      <div className="bg-white rounded-xl border border-gray-200 p-10 text-center shadow-sm">
         <div className="text-4xl mb-3">⚽</div>
         <p className="text-gray-500 font-medium">No results recorded yet</p>
         <p className="text-gray-400 text-sm mt-1">Standings will appear once games are played</p>
@@ -158,99 +174,110 @@ function StandingsView({ standings }: { standings: StandingsRow[] }) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-      <div className="px-5 py-3 border-b border-gray-100" style={{ background: '#0A1628' }}>
-        <h2 className="text-white font-semibold text-sm tracking-wide uppercase">Standings</h2>
+    <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+      {/* Table header bar */}
+      <div className="px-6 py-4 border-b border-gray-200" style={{ background: '#0A1628' }}>
+        <h2 className="text-white font-bold text-sm tracking-widest uppercase">Standings</h2>
+        <p className="text-gray-400 text-xs mt-0.5">Win 3 pts · Draw 1 pt · Loss 0 pts</p>
       </div>
+
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full">
           <thead>
-            <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
-              <th className="text-left px-4 py-3 font-semibold w-8">#</th>
-              <th className="text-left px-4 py-3 font-semibold min-w-[140px]">Team</th>
-              <th className="text-center px-4 py-3 font-semibold">GP</th>
-              <th className="text-center px-4 py-3 font-semibold">W</th>
-              <th className="text-center px-4 py-3 font-semibold">D</th>
-              <th className="text-center px-4 py-3 font-semibold">L</th>
-              <th className="text-center px-4 py-3 font-semibold">GF</th>
-              <th className="text-center px-4 py-3 font-semibold">GA</th>
-              <th className="text-center px-4 py-3 font-semibold">GD</th>
-              <th className="text-center px-4 py-3 font-semibold" style={{ color: '#007A87' }}>PTS</th>
+            <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+              <th className="text-left py-3 pl-6 pr-2 text-xs font-bold text-gray-400 uppercase tracking-wider w-10">#</th>
+              <th className="text-left py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Team</th>
+              <th className="text-center py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-14">P</th>
+              <th className="text-center py-3 px-4 text-xs font-bold uppercase tracking-wider w-14" style={{ color: '#16a34a' }}>W</th>
+              <th className="text-center py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-14">D</th>
+              <th className="text-center py-3 px-4 text-xs font-bold uppercase tracking-wider w-14" style={{ color: '#dc2626' }}>L</th>
+              <th className="text-center py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-14">GF</th>
+              <th className="text-center py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-14">GA</th>
+              <th className="text-center py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-16">GD</th>
+              <th className="text-center py-3 pl-4 pr-6 text-xs font-bold uppercase tracking-wider w-16" style={{ color: '#007A87' }}>PTS</th>
             </tr>
           </thead>
           <tbody>
             {standings.map((row, i) => (
-              <tr key={row.team} className="border-t border-gray-100 hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-3 text-gray-400 font-medium text-xs">{i + 1}</td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    {row.flag && <span className="text-lg">{row.flag}</span>}
-                    <span className="font-semibold text-gray-800">{row.team}</span>
+              <tr
+                key={row.team}
+                style={{ borderBottom: '1px solid #e2e8f0' }}
+                className="hover:bg-slate-50 transition-colors"
+              >
+                <td className="py-4 pl-6 pr-2 text-sm font-semibold text-gray-400">{i + 1}</td>
+                <td className="py-4 px-4">
+                  <div className="flex items-center gap-3">
+                    <FlagImg emoji={row.flag} size={24} />
+                    <span className="font-semibold text-gray-800 text-sm">{row.team}</span>
                   </div>
                 </td>
-                <td className="text-center px-4 py-3 text-gray-600">{row.gp}</td>
-                <td className="text-center px-4 py-3 text-gray-600">{row.w}</td>
-                <td className="text-center px-4 py-3 text-gray-600">{row.d}</td>
-                <td className="text-center px-4 py-3 text-gray-600">{row.l}</td>
-                <td className="text-center px-4 py-3 text-gray-600">{row.gf}</td>
-                <td className="text-center px-4 py-3 text-gray-600">{row.ga}</td>
-                <td className={`text-center px-4 py-3 font-medium ${row.gd > 0 ? 'text-green-600' : row.gd < 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                <td className="py-4 px-4 text-center text-sm text-gray-600 font-medium">{row.gp}</td>
+                <td className="py-4 px-4 text-center text-sm font-bold" style={{ color: '#16a34a' }}>{row.w}</td>
+                <td className="py-4 px-4 text-center text-sm text-gray-500 font-medium">{row.d}</td>
+                <td className="py-4 px-4 text-center text-sm font-bold" style={{ color: row.l > 0 ? '#dc2626' : '#9ca3af' }}>{row.l}</td>
+                <td className="py-4 px-4 text-center text-sm text-gray-600 font-medium">{row.gf}</td>
+                <td className="py-4 px-4 text-center text-sm text-gray-600 font-medium">{row.ga}</td>
+                <td className={`py-4 px-4 text-center text-sm font-semibold ${row.gd > 0 ? 'text-green-600' : row.gd < 0 ? 'text-red-500' : 'text-gray-400'}`}>
                   {row.gd > 0 ? `+${row.gd}` : row.gd}
                 </td>
-                <td className="text-center px-4 py-3 font-bold text-base" style={{ color: '#0A1628' }}>
-                  {row.pts}
+                <td className="py-4 pl-4 pr-6 text-center">
+                  <span className="text-base font-black" style={{ color: '#0A1628' }}>{row.pts}</span>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
       {/* Legend */}
-      <div className="px-5 py-3 bg-gray-50 border-t border-gray-100">
+      <div className="px-6 py-3 border-t border-gray-100" style={{ background: '#f8fafc' }}>
         <p className="text-xs text-gray-400 text-center">
-          GP = Games Played &nbsp;·&nbsp; W = Won &nbsp;·&nbsp; D = Draw &nbsp;·&nbsp; L = Lost &nbsp;·&nbsp; GF = Goals For &nbsp;·&nbsp; GA = Goals Against &nbsp;·&nbsp; GD = Goal Difference &nbsp;·&nbsp; PTS = Points
+          P = Played &nbsp;·&nbsp; W = Won &nbsp;·&nbsp; D = Draw &nbsp;·&nbsp; L = Lost &nbsp;·&nbsp; GF = Goals For &nbsp;·&nbsp; GA = Goals Against &nbsp;·&nbsp; GD = Goal Difference &nbsp;·&nbsp; PTS = Points
         </p>
       </div>
     </div>
   )
 }
 
-function ResultsView({ completed }: { completed: Game[] }) {
+function ResultsTable({ completed }: { completed: Game[] }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-      <div className="px-5 py-3 border-b border-gray-100" style={{ background: '#0A1628' }}>
-        <h2 className="text-white font-semibold text-sm tracking-wide uppercase">Results</h2>
+    <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+      <div className="px-6 py-4 border-b border-gray-200" style={{ background: '#0A1628' }}>
+        <h2 className="text-white font-bold text-sm tracking-widest uppercase">Results</h2>
       </div>
-      <div className="divide-y divide-gray-100">
+      <div>
         {completed.map(g => {
           const homeWon = (g.home_score ?? 0) > (g.away_score ?? 0)
           const awayWon = (g.away_score ?? 0) > (g.home_score ?? 0)
           return (
-            <div key={g.id} className="px-5 py-3">
-              <div className="text-xs text-gray-400 mb-1">
+            <div key={g.id} className="px-6 py-4" style={{ borderBottom: '1px solid #e2e8f0' }}>
+              <p className="text-xs text-gray-400 mb-2">
                 {formatDate(g.game_date, g.game_time)}{g.field ? ` · ${g.field}` : ''}
-              </div>
-              <div className="flex items-center gap-3">
-                <div className={`flex items-center gap-2 flex-1 ${homeWon ? 'opacity-100' : 'opacity-70'}`}>
-                  <span className="text-xl">{g.home_flag}</span>
+              </p>
+              <div className="flex items-center gap-4">
+                {/* Home team */}
+                <div className={`flex items-center gap-2 flex-1 ${homeWon ? '' : 'opacity-60'}`}>
+                  <FlagImg emoji={g.home_flag} size={20} />
                   <span className={`text-sm ${homeWon ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>
                     {g.home_team}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className={`text-xl font-black ${homeWon ? 'text-gray-900' : 'text-gray-500'}`}>
+                {/* Score */}
+                <div className="flex items-center gap-2 shrink-0 px-3 py-1 rounded-lg" style={{ background: '#f1f5f9' }}>
+                  <span className={`text-lg font-black w-6 text-center ${homeWon ? 'text-gray-900' : 'text-gray-400'}`}>
                     {g.home_score}
                   </span>
-                  <span className="text-gray-300 font-light">–</span>
-                  <span className={`text-xl font-black ${awayWon ? 'text-gray-900' : 'text-gray-500'}`}>
+                  <span className="text-gray-300 text-sm">–</span>
+                  <span className={`text-lg font-black w-6 text-center ${awayWon ? 'text-gray-900' : 'text-gray-400'}`}>
                     {g.away_score}
                   </span>
                 </div>
-                <div className={`flex items-center gap-2 flex-1 justify-end ${awayWon ? 'opacity-100' : 'opacity-70'}`}>
+                {/* Away team */}
+                <div className={`flex items-center gap-2 flex-1 justify-end ${awayWon ? '' : 'opacity-60'}`}>
                   <span className={`text-sm ${awayWon ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>
                     {g.away_team}
                   </span>
-                  <span className="text-xl">{g.away_flag}</span>
+                  <FlagImg emoji={g.away_flag} size={20} />
                 </div>
               </div>
             </div>
