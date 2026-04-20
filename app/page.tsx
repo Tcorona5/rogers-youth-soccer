@@ -17,39 +17,40 @@ const DIVISIONS: Division[] = [
 
 function computeStandings(games: Game[]): StandingsRow[] {
   const map: Record<string, StandingsRow> = {}
-
   const ensure = (team: string, flag: string) => {
     if (!map[team]) map[team] = { team, flag, gp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 }
   }
-
   for (const g of games) {
     if (!g.counts_for_standings || g.is_cancelled) continue
     if (g.home_score === null || g.away_score === null) continue
-
     ensure(g.home_team, g.home_flag)
     ensure(g.away_team, g.away_flag)
-
     const h = map[g.home_team]
     const a = map[g.away_team]
-
     h.gp++; h.gf += g.home_score; h.ga += g.away_score; h.gd = h.gf - h.ga
     a.gp++; a.gf += g.away_score; a.ga += g.home_score; a.gd = a.gf - a.ga
-
     if (g.home_score > g.away_score) { h.w++; h.pts += 3; a.l++ }
     else if (g.home_score < g.away_score) { a.w++; a.pts += 3; h.l++ }
     else { h.d++; h.pts++; a.d++; a.pts++ }
   }
-
   return Object.values(map).sort((a, b) =>
     b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || a.ga - b.ga
   )
+}
+
+function formatDate(dateStr: string | null, timeStr: string | null): string {
+  if (!dateStr) return ''
+  try {
+    const d = new Date(dateStr + 'T12:00:00')
+    const date = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+    return timeStr ? `${date} · ${timeStr}` : date
+  } catch { return dateStr }
 }
 
 export default function HomePage() {
   const [activeDiv, setActiveDiv] = useState('u9b')
   const [games, setGames] = useState<Game[]>([])
   const [loading, setLoading] = useState(true)
-  const [tab, setTab] = useState<'standings' | 'results'>('standings')
 
   const loadGames = useCallback(async (slug: string) => {
     setLoading(true)
@@ -65,22 +66,24 @@ export default function HomePage() {
   useEffect(() => { loadGames(activeDiv) }, [activeDiv, loadGames])
 
   const standings = computeStandings(games)
-  const completed = games.filter(g => !g.is_cancelled && g.home_score !== null && g.counts_for_standings)
+  const completed = games
+    .filter(g => !g.is_cancelled && g.home_score !== null && g.counts_for_standings)
     .sort((a, b) => (b.game_date || '').localeCompare(a.game_date || ''))
-  const upcoming = games.filter(g => !g.is_cancelled && g.home_score === null && g.counts_for_standings)
-    .sort((a, b) => (a.game_date || '').localeCompare(b.game_date || ''))
 
   return (
     <div className="min-h-screen" style={{ background: '#f8fafc' }}>
-      {/* Header */}
-      <header style={{ background: '#0A1628' }} className="shadow-lg">
-        <div className="max-w-5xl mx-auto px-4 py-5">
-          <div className="flex items-center gap-3">
+      {/* Header — USA blue / Mexico green / Canada red tricolor stripes + navy body */}
+      <header className="shadow-lg">
+        <div style={{ display: 'flex', height: '7px' }}>
+          <div style={{ flex: 1, background: '#0033A0' }} />
+          <div style={{ flex: 1, background: '#006847' }} />
+          <div style={{ flex: 1, background: '#D80027' }} />
+        </div>
+        <div style={{ background: '#0A1628' }} className="px-4 py-5">
+          <div className="max-w-5xl mx-auto flex items-center gap-3">
             <div className="text-3xl">⚽</div>
             <div>
-              <h1 className="text-white font-bold text-xl leading-tight">
-                Rogers Youth Soccer
-              </h1>
+              <h1 className="text-white font-bold text-xl leading-tight">Rogers Youth Soccer</h1>
               <p style={{ color: '#C8A84B' }} className="text-sm font-medium tracking-wide">
                 🌍 Spring 2026 · World Cup Season
               </p>
@@ -104,13 +107,13 @@ export default function HomePage() {
             {DIVISIONS.map(d => (
               <button
                 key={d.slug}
-                onClick={() => { setActiveDiv(d.slug); setTab('standings') }}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                onClick={() => setActiveDiv(d.slug)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
                   activeDiv === d.slug
-                    ? 'text-white shadow-md'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-400'
+                    ? 'text-white border-transparent shadow-md'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
                 }`}
-                style={activeDiv === d.slug ? { background: '#0A1628' } : {}}
+                style={activeDiv === d.slug ? { background: '#007A87', borderColor: '#007A87' } : {}}
               >
                 {d.display_name}
               </button>
@@ -118,28 +121,13 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Tab switcher */}
-        <div className="flex gap-1 mb-5 bg-white border border-gray-200 rounded-lg p-1 w-fit">
-          {(['standings', 'results'] as const).map(t => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${
-                tab === t ? 'text-white shadow-sm' : 'text-gray-600 hover:text-gray-800'
-              }`}
-              style={tab === t ? { background: '#007A87' } : {}}
-            >
-              {t === 'results' ? `Results (${completed.length})` : `Standings (${standings.length})`}
-            </button>
-          ))}
-        </div>
-
         {loading ? (
           <div className="text-center py-16 text-gray-400">Loading…</div>
-        ) : tab === 'standings' ? (
-          <StandingsView standings={standings} upcoming={upcoming} />
         ) : (
-          <ResultsView completed={completed} />
+          <div className="space-y-6">
+            <StandingsView standings={standings} />
+            {completed.length > 0 && <ResultsView completed={completed} />}
+          </div>
         )}
       </div>
 
@@ -150,7 +138,7 @@ export default function HomePage() {
             Rogers Community-School Recreation Association · Spring 2026
           </p>
           <p className="text-gray-500 text-xs mt-1">
-            For questions contact Rogers Parks & Recreation
+            For questions contact Rogers Parks &amp; Recreation
           </p>
         </div>
       </footer>
@@ -158,7 +146,7 @@ export default function HomePage() {
   )
 }
 
-function StandingsView({ standings, upcoming }: { standings: StandingsRow[], upcoming: Game[] }) {
+function StandingsView({ standings }: { standings: StandingsRow[] }) {
   if (standings.length === 0) {
     return (
       <div className="bg-white rounded-xl border border-gray-200 p-10 text-center">
@@ -170,95 +158,64 @@ function StandingsView({ standings, upcoming }: { standings: StandingsRow[], upc
   }
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-        <div className="px-5 py-3 border-b border-gray-100" style={{ background: '#0A1628' }}>
-          <h2 className="text-white font-semibold text-sm tracking-wide uppercase">Standings</h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
-                <th className="text-left px-4 py-2 font-semibold w-8">#</th>
-                <th className="text-left px-4 py-2 font-semibold">Team</th>
-                <th className="text-center px-2 py-2 font-semibold">GP</th>
-                <th className="text-center px-2 py-2 font-semibold">W</th>
-                <th className="text-center px-2 py-2 font-semibold">D</th>
-                <th className="text-center px-2 py-2 font-semibold">L</th>
-                <th className="text-center px-2 py-2 font-semibold">GF</th>
-                <th className="text-center px-2 py-2 font-semibold">GA</th>
-                <th className="text-center px-2 py-2 font-semibold">GD</th>
-                <th className="text-center px-2 py-2 font-semibold" style={{ color: '#007A87' }}>PTS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {standings.map((row, i) => (
-                <tr key={row.team} className={`border-t border-gray-100 ${i === 0 ? 'bg-amber-50' : ''}`}>
-                  <td className="px-4 py-3 text-gray-400 font-medium text-xs">{i + 1}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      {row.flag && <span className="text-lg">{row.flag}</span>}
-                      <span className="font-semibold text-gray-800">{row.team}</span>
-                      {i === 0 && <span className="text-xs text-amber-600 font-medium">🏆 1st</span>}
-                    </div>
-                  </td>
-                  <td className="text-center px-2 py-3 text-gray-600">{row.gp}</td>
-                  <td className="text-center px-2 py-3 text-gray-600">{row.w}</td>
-                  <td className="text-center px-2 py-3 text-gray-600">{row.d}</td>
-                  <td className="text-center px-2 py-3 text-gray-600">{row.l}</td>
-                  <td className="text-center px-2 py-3 text-gray-600">{row.gf}</td>
-                  <td className="text-center px-2 py-3 text-gray-600">{row.ga}</td>
-                  <td className={`text-center px-2 py-3 font-medium ${row.gd > 0 ? 'text-green-600' : row.gd < 0 ? 'text-red-500' : 'text-gray-400'}`}>
-                    {row.gd > 0 ? `+${row.gd}` : row.gd}
-                  </td>
-                  <td className="text-center px-2 py-3 font-bold text-base" style={{ color: '#0A1628' }}>
-                    {row.pts}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+      <div className="px-5 py-3 border-b border-gray-100" style={{ background: '#0A1628' }}>
+        <h2 className="text-white font-semibold text-sm tracking-wide uppercase">Standings</h2>
       </div>
-
-      {upcoming.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-          <div className="px-5 py-3 border-b border-gray-100" style={{ background: '#007A87' }}>
-            <h2 className="text-white font-semibold text-sm tracking-wide uppercase">Upcoming Games</h2>
-          </div>
-          <div className="divide-y divide-gray-100">
-            {upcoming.slice(0, 10).map(g => (
-              <div key={g.id} className="px-5 py-3 flex items-center justify-between gap-4">
-                <div className="text-xs text-gray-400 min-w-0 w-32 shrink-0">
-                  {formatDate(g.game_date, g.game_time)}
-                </div>
-                <div className="flex items-center gap-2 flex-1 justify-center">
-                  <span className="text-base">{g.home_flag}</span>
-                  <span className="font-medium text-gray-700 text-sm">{g.home_team}</span>
-                  <span className="text-gray-300 text-xs font-light">vs</span>
-                  <span className="font-medium text-gray-700 text-sm">{g.away_team}</span>
-                  <span className="text-base">{g.away_flag}</span>
-                </div>
-                <div className="text-xs text-gray-400 w-20 text-right shrink-0">{g.field || ''}</div>
-              </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+              <th className="text-left px-4 py-3 font-semibold w-8">#</th>
+              <th className="text-left px-4 py-3 font-semibold min-w-[140px]">Team</th>
+              <th className="text-center px-4 py-3 font-semibold">GP</th>
+              <th className="text-center px-4 py-3 font-semibold">W</th>
+              <th className="text-center px-4 py-3 font-semibold">D</th>
+              <th className="text-center px-4 py-3 font-semibold">L</th>
+              <th className="text-center px-4 py-3 font-semibold">GF</th>
+              <th className="text-center px-4 py-3 font-semibold">GA</th>
+              <th className="text-center px-4 py-3 font-semibold">GD</th>
+              <th className="text-center px-4 py-3 font-semibold" style={{ color: '#007A87' }}>PTS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {standings.map((row, i) => (
+              <tr key={row.team} className="border-t border-gray-100 hover:bg-gray-50 transition-colors">
+                <td className="px-4 py-3 text-gray-400 font-medium text-xs">{i + 1}</td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    {row.flag && <span className="text-lg">{row.flag}</span>}
+                    <span className="font-semibold text-gray-800">{row.team}</span>
+                  </div>
+                </td>
+                <td className="text-center px-4 py-3 text-gray-600">{row.gp}</td>
+                <td className="text-center px-4 py-3 text-gray-600">{row.w}</td>
+                <td className="text-center px-4 py-3 text-gray-600">{row.d}</td>
+                <td className="text-center px-4 py-3 text-gray-600">{row.l}</td>
+                <td className="text-center px-4 py-3 text-gray-600">{row.gf}</td>
+                <td className="text-center px-4 py-3 text-gray-600">{row.ga}</td>
+                <td className={`text-center px-4 py-3 font-medium ${row.gd > 0 ? 'text-green-600' : row.gd < 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                  {row.gd > 0 ? `+${row.gd}` : row.gd}
+                </td>
+                <td className="text-center px-4 py-3 font-bold text-base" style={{ color: '#0A1628' }}>
+                  {row.pts}
+                </td>
+              </tr>
             ))}
-          </div>
-        </div>
-      )}
+          </tbody>
+        </table>
+      </div>
+      {/* Legend */}
+      <div className="px-5 py-3 bg-gray-50 border-t border-gray-100">
+        <p className="text-xs text-gray-400 text-center">
+          GP = Games Played &nbsp;·&nbsp; W = Won &nbsp;·&nbsp; D = Draw &nbsp;·&nbsp; L = Lost &nbsp;·&nbsp; GF = Goals For &nbsp;·&nbsp; GA = Goals Against &nbsp;·&nbsp; GD = Goal Difference &nbsp;·&nbsp; PTS = Points
+        </p>
+      </div>
     </div>
   )
 }
 
 function ResultsView({ completed }: { completed: Game[] }) {
-  if (completed.length === 0) {
-    return (
-      <div className="bg-white rounded-xl border border-gray-200 p-10 text-center">
-        <div className="text-4xl mb-3">📋</div>
-        <p className="text-gray-500 font-medium">No results yet</p>
-      </div>
-    )
-  }
-
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
       <div className="px-5 py-3 border-b border-gray-100" style={{ background: '#0A1628' }}>
@@ -302,13 +259,4 @@ function ResultsView({ completed }: { completed: Game[] }) {
       </div>
     </div>
   )
-}
-
-function formatDate(dateStr: string | null, timeStr: string | null): string {
-  if (!dateStr) return ''
-  try {
-    const d = new Date(dateStr + 'T12:00:00')
-    const date = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-    return timeStr ? `${date} · ${timeStr}` : date
-  } catch { return dateStr }
 }
