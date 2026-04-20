@@ -107,20 +107,16 @@ export default function HomePage() {
 
       {/* Navbar — Rogers green, clean like adult site */}
       <header style={{ background: ROGERS_GREEN }} className="shadow-md">
-        <div className="max-w-5xl mx-auto" style={{ padding: '16px 24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {/* Logo with padding so it doesn't touch the edge */}
-            <img src="/Logo_White.png" alt="Rogers Parks & Recreation" style={{ height: '56px', width: 'auto', flexShrink: 0 }} />
-            {/* Title block */}
-            <div>
-              <h1 style={{ color: 'white', fontWeight: 700, fontSize: '20px', letterSpacing: '-0.3px', lineHeight: 1.2 }}>
-                Rogers Youth Soccer &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Rogers Activity Center
-              </h1>
-              <p style={{ color: 'white', fontSize: '12px', marginTop: '4px', opacity: 0.8 }}>
-                🌍 World Cup Season
-              </p>
-            </div>
-          </div>
+        <div style={{ padding: '12px 20px 16px 20px' }}>
+          {/* Logo — top left with small padding so full logo is visible */}
+          <img src="/Logo_White.png" alt="Rogers Parks & Recreation" style={{ height: '52px', width: 'auto', display: 'block', marginBottom: '10px' }} />
+          {/* Title below logo */}
+          <h1 style={{ color: 'white', fontWeight: 700, fontSize: '20px', letterSpacing: '-0.3px', lineHeight: 1.2 }}>
+            Rogers Youth Soccer &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Rogers Activity Center
+          </h1>
+          <p style={{ color: 'white', fontSize: '12px', marginTop: '4px', opacity: 0.8 }}>
+            🌍 World Cup Season
+          </p>
         </div>
       </header>
 
