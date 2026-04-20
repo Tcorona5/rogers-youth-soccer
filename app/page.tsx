@@ -107,17 +107,19 @@ export default function HomePage() {
 
       {/* Navbar — Rogers green, clean like adult site */}
       <header style={{ background: ROGERS_GREEN }} className="shadow-md">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
-          {/* Logo */}
-          <img src="/Logo_White.png" alt="Rogers Parks & Recreation" style={{ height: '52px', width: 'auto', flexShrink: 0 }} />
-          {/* Title */}
-          <div style={{ flex: 1 }}>
-            <h1 style={{ color: "white", fontWeight: 700, fontSize: "22px", letterSpacing: "-0.5px", lineHeight: 1.2 }}>Rogers Youth Soccer</h1>
-            <p style={{ color: "white", fontSize: "13px", marginTop: "2px", opacity: 0.85 }}>Spring 2026 · Rogers Activity Center</p>
-          </div>
-          {/* World Cup tag */}
-          <div className="hidden sm:block" style={{ flexShrink: 0 }}>
-            <span style={{ color: "white", fontSize: "13px", opacity: 0.85 }}>🌍 World Cup Season</span>
+        <div className="max-w-5xl mx-auto" style={{ padding: '16px 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            {/* Logo with padding so it doesn't touch the edge */}
+            <img src="/Logo_White.png" alt="Rogers Parks & Recreation" style={{ height: '56px', width: 'auto', flexShrink: 0 }} />
+            {/* Title block */}
+            <div>
+              <h1 style={{ color: 'white', fontWeight: 700, fontSize: '20px', letterSpacing: '-0.3px', lineHeight: 1.2 }}>
+                Rogers Youth Soccer &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Rogers Activity Center
+              </h1>
+              <p style={{ color: 'white', fontSize: '12px', marginTop: '4px', opacity: 0.8 }}>
+                🌍 World Cup Season
+              </p>
+            </div>
           </div>
         </div>
       </header>
