@@ -26,13 +26,19 @@ function flagEmojiToCode(emoji: string): string {
   } catch { return '' }
 }
 
-function FlagImg({ emoji, size = 22 }: { emoji: string; size?: number }) {
-  const code = flagEmojiToCode(emoji)
+const NAME_FLAG_OVERRIDES: Record<string, string> = {
+  'England': 'gb-eng',
+  'Scotland': 'gb-sct',
+  'Wales': 'gb-wls',
+}
+
+function FlagImg({ emoji, size = 22, name = '' }: { emoji: string; size?: number; name?: string }) {
+  const code = NAME_FLAG_OVERRIDES[name] || flagEmojiToCode(emoji)
   if (!code) return null
   return (
     <img
       src={`https://flagcdn.com/w40/${code}.png`}
-      alt={code.toUpperCase()}
+      alt={name || code.toUpperCase()}
       width={size}
       height={Math.round(size * 0.67)}
       style={{ objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }}
@@ -219,7 +225,7 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
                 <td style={{ ...cellStyle(), color: '#9ca3af', fontWeight: 600 }}>{i + 1}</td>
                 <td style={{ padding: '18px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <FlagImg emoji={row.flag} size={26} />
+                    <FlagImg emoji={row.flag} size={26} name={row.team} />
                     <span style={{ fontWeight: 600, color: '#111827', fontSize: '14px' }}>{row.team}</span>
                   </div>
                 </td>
@@ -270,7 +276,7 @@ function ResultsTable({ completed }: { completed: Game[] }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 {/* Home */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, opacity: homeWon ? 1 : 0.5 }}>
-                  <FlagImg emoji={g.home_flag} size={22} />
+                  <FlagImg emoji={g.home_flag} size={22} name={g.home_team} />
                   <span style={{ fontSize: '14px', fontWeight: homeWon ? 700 : 500, color: homeWon ? '#111827' : '#6b7280' }}>
                     {g.home_team}
                   </span>
@@ -290,7 +296,7 @@ function ResultsTable({ completed }: { completed: Game[] }) {
                   <span style={{ fontSize: '14px', fontWeight: awayWon ? 700 : 500, color: awayWon ? '#111827' : '#6b7280' }}>
                     {g.away_team}
                   </span>
-                  <FlagImg emoji={g.away_flag} size={22} />
+                  <FlagImg emoji={g.away_flag} size={22} name={g.away_team} />
                 </div>
               </div>
             </div>
