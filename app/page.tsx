@@ -18,7 +18,7 @@ const DIVISIONS: Division[] = [
 function flagEmojiToCode(emoji: string): string {
   if (!emoji) return ''
   try {
-    const codePoints = [...emoji].map(c => c.codePointAt(0)! - 0x1F1E6)
+    const codePoints = Array.from(emoji).map(c => c.codePointAt(0)! - 0x1F1E6)
     if (codePoints.length < 2 || codePoints[0] < 0 || codePoints[1] < 0) return ''
     return String.fromCharCode(65 + codePoints[0], 65 + codePoints[1]).toLowerCase()
   } catch { return '' }
