@@ -102,7 +102,7 @@ export default function HomePage() {
           <div style={{ flex: 1, background: '#006847' }} />
           <div style={{ flex: 1, background: '#D80027' }} />
         </div>
-        <div style={{ background: '#0A1628' }} className="px-4 py-5">
+        <div style={{ background: '#0033A0' }} className="px-4 py-5">
           <div className="max-w-5xl mx-auto flex items-center gap-3">
             <div className="text-3xl">⚽</div>
             <div>
