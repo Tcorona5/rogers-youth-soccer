@@ -206,11 +206,11 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
                 }}
                 className="hover:bg-slate-50 transition-colors"
               >
-                <td className="py-5 pl-6 pr-2 text-sm font-semibold text-gray-400 text-center">{i + 1}</td>
+                <td className="py-5 text-sm font-semibold text-gray-400" style={{ textAlign: 'center', width: '52px' }}>{i + 1}</td>
                 <td className="py-5 px-4">
-                  <div className="flex items-center gap-4">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <FlagImg emoji={row.flag} size={26} />
-                    <span className="font-semibold text-gray-800 ml-1">{row.team}</span>
+                    <span className="font-semibold text-gray-800">{row.team}</span>
                   </div>
                 </td>
                 <td className="py-5 px-2 text-center text-sm text-gray-600 font-medium">{row.gp}</td>
