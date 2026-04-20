@@ -227,7 +227,7 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
                 <td style={{ padding: '18px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <FlagImg emoji={row.flag} size={26} name={row.team} />
-                    <span style={{ fontWeight: 600, color: '#111827', fontSize: '14px' }}>{row.team.split('').filter(c => { const cp = c.codePointAt(0) || 0; return cp < 0x1F3F4 || (cp > 0x1F3F4 && cp < 0xE0000) || cp > 0xE007F; }).join('').trim()}</span>
+                    <span style={{ fontWeight: 600, color: '#111827', fontSize: '14px' }}>{Array.from(row.team).filter(c => { const cp = c.codePointAt(0) || 0; return cp < 0x1F3F4 || (cp > 0x1F3F4 && cp < 0xE0000) || cp > 0xE007F; }).join('').trim()}</span>
                   </div>
                 </td>
                 <td style={{ ...cellStyle(), color: '#6b7280', fontWeight: 500 }}>{row.gp}</td>
