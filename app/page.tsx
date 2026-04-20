@@ -33,7 +33,8 @@ const NAME_FLAG_OVERRIDES: Record<string, string> = {
 }
 
 function FlagImg({ emoji, size = 22, name = '' }: { emoji: string; size?: number; name?: string }) {
-  const code = NAME_FLAG_OVERRIDES[name] || flagEmojiToCode(emoji)
+  const overrideKey = Object.keys(NAME_FLAG_OVERRIDES).find(k => name.includes(k))
+  const code = (overrideKey ? NAME_FLAG_OVERRIDES[overrideKey] : null) || flagEmojiToCode(emoji)
   if (!code) return null
   return (
     <img
@@ -226,7 +227,7 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
                 <td style={{ padding: '18px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <FlagImg emoji={row.flag} size={26} name={row.team} />
-                    <span style={{ fontWeight: 600, color: '#111827', fontSize: '14px' }}>{row.team}</span>
+                    <span style={{ fontWeight: 600, color: '#111827', fontSize: '14px' }}>{row.team.replace(/[\u{1F3F4}\u{E0000}-\u{E007F}]/gu, '').trim()}</span>
                   </div>
                 </td>
                 <td style={{ ...cellStyle(), color: '#6b7280', fontWeight: 500 }}>{row.gp}</td>
