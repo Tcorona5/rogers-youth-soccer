@@ -182,45 +182,48 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full table-fixed">
           <thead>
-            <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
-              <th className="text-left py-3 pl-6 pr-2 text-xs font-bold text-gray-400 uppercase tracking-wider w-10">#</th>
-              <th className="text-left py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Team</th>
-              <th className="text-center py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-14">P</th>
-              <th className="text-center py-3 px-4 text-xs font-bold uppercase tracking-wider w-14" style={{ color: '#16a34a' }}>W</th>
-              <th className="text-center py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-14">D</th>
-              <th className="text-center py-3 px-4 text-xs font-bold uppercase tracking-wider w-14" style={{ color: '#dc2626' }}>L</th>
-              <th className="text-center py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-14">GF</th>
-              <th className="text-center py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-14">GA</th>
-              <th className="text-center py-3 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-16">GD</th>
-              <th className="text-center py-3 pl-4 pr-6 text-xs font-bold uppercase tracking-wider w-16" style={{ color: '#007A87' }}>PTS</th>
+            <tr style={{ background: '#f8fafc', borderBottom: '2px solid #cbd5e1' }}>
+              <th className="text-left py-4 pl-6 pr-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '52px' }}>#</th>
+              <th className="text-left py-4 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Team</th>
+              <th className="text-center py-4 px-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '72px' }}>P</th>
+              <th className="text-center py-4 px-2 text-xs font-bold uppercase tracking-wider" style={{ width: '72px', color: '#16a34a' }}>W</th>
+              <th className="text-center py-4 px-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '72px' }}>D</th>
+              <th className="text-center py-4 px-2 text-xs font-bold uppercase tracking-wider" style={{ width: '72px', color: '#dc2626' }}>L</th>
+              <th className="text-center py-4 px-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '72px' }}>GF</th>
+              <th className="text-center py-4 px-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '72px' }}>GA</th>
+              <th className="text-center py-4 px-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '80px' }}>GD</th>
+              <th className="text-center py-4 pl-2 pr-6 text-xs font-bold uppercase tracking-wider" style={{ width: '80px', color: '#007A87' }}>PTS</th>
             </tr>
           </thead>
           <tbody>
             {standings.map((row, i) => (
               <tr
                 key={row.team}
-                style={{ borderBottom: '1px solid #e2e8f0' }}
+                style={{
+                  borderBottom: '1px solid #e2e8f0',
+                  background: i === 0 ? '#f0fdf4' : 'white',
+                }}
                 className="hover:bg-slate-50 transition-colors"
               >
-                <td className="py-4 pl-6 pr-2 text-sm font-semibold text-gray-400">{i + 1}</td>
-                <td className="py-4 px-4">
+                <td className="py-5 pl-6 pr-2 text-sm font-semibold text-gray-400">{i + 1}</td>
+                <td className="py-5 px-4">
                   <div className="flex items-center gap-3">
-                    <FlagImg emoji={row.flag} size={24} />
-                    <span className="font-semibold text-gray-800 text-sm">{row.team}</span>
+                    <FlagImg emoji={row.flag} size={26} />
+                    <span className="font-semibold text-gray-800">{row.team}</span>
                   </div>
                 </td>
-                <td className="py-4 px-4 text-center text-sm text-gray-600 font-medium">{row.gp}</td>
-                <td className="py-4 px-4 text-center text-sm font-bold" style={{ color: '#16a34a' }}>{row.w}</td>
-                <td className="py-4 px-4 text-center text-sm text-gray-500 font-medium">{row.d}</td>
-                <td className="py-4 px-4 text-center text-sm font-bold" style={{ color: row.l > 0 ? '#dc2626' : '#9ca3af' }}>{row.l}</td>
-                <td className="py-4 px-4 text-center text-sm text-gray-600 font-medium">{row.gf}</td>
-                <td className="py-4 px-4 text-center text-sm text-gray-600 font-medium">{row.ga}</td>
-                <td className={`py-4 px-4 text-center text-sm font-semibold ${row.gd > 0 ? 'text-green-600' : row.gd < 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                <td className="py-5 px-2 text-center text-sm text-gray-600 font-medium">{row.gp}</td>
+                <td className="py-5 px-2 text-center text-sm font-bold" style={{ color: '#16a34a' }}>{row.w}</td>
+                <td className="py-5 px-2 text-center text-sm text-gray-500 font-medium">{row.d}</td>
+                <td className="py-5 px-2 text-center text-sm font-bold" style={{ color: row.l > 0 ? '#dc2626' : '#9ca3af' }}>{row.l}</td>
+                <td className="py-5 px-2 text-center text-sm text-gray-600 font-medium">{row.gf}</td>
+                <td className="py-5 px-2 text-center text-sm text-gray-600 font-medium">{row.ga}</td>
+                <td className={`py-5 px-2 text-center text-sm font-semibold ${row.gd > 0 ? 'text-green-600' : row.gd < 0 ? 'text-red-500' : 'text-gray-400'}`}>
                   {row.gd > 0 ? `+${row.gd}` : row.gd}
                 </td>
-                <td className="py-4 pl-4 pr-6 text-center">
+                <td className="py-5 pl-2 pr-6 text-center">
                   <span className="text-base font-black" style={{ color: '#0A1628' }}>{row.pts}</span>
                 </td>
               </tr>
