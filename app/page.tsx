@@ -102,11 +102,11 @@ export default function HomePage() {
       <header style={{ background: ROGERS_GREEN }} className="shadow-md">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-white font-bold text-2xl tracking-tight">Rogers Youth Soccer</h1>
-            <p className="text-green-200 text-sm mt-0.5">Spring 2026 · Rogers Activity Center</p>
+            <h1 style={{ color: "white", fontWeight: 700, fontSize: "24px", letterSpacing: "-0.5px" }}>Rogers Youth Soccer</h1>
+            <p style={{ color: "white", fontSize: "13px", marginTop: "2px", opacity: 0.85 }}>Spring 2026 · Rogers Activity Center</p>
           </div>
           <div className="text-right hidden sm:block">
-            <span className="text-green-200 text-sm">🌍 World Cup Season</span>
+            <span style={{ color: "white", fontSize: "13px", opacity: 0.85 }}>🌍 World Cup Season</span>
           </div>
         </div>
       </header>
@@ -174,10 +174,9 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden" style={{ border: '1px solid #e5e7eb' }}>
-      {/* Header bar */}
-      <div className="px-6 py-4" style={{ background: ROGERS_GREEN }}>
-        <h2 className="text-white font-bold text-lg">Standings</h2>
-        <p className="text-green-200 text-xs mt-0.5">Win 3 pts · Draw 1 pt · Loss 0 pts</p>
+      <div style={{ padding: "24px 24px 0 24px" }}>
+        <h2 style={{ fontSize: "22px", fontWeight: 700, color: "#111827" }}>Standings</h2>
+        <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "2px" }}>Win 3 pts · Draw 1 pt · Loss 0 pts</p>
       </div>
 
       <div className="overflow-x-auto">
@@ -253,8 +252,8 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
 function ResultsTable({ completed }: { completed: Game[] }) {
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden" style={{ border: '1px solid #e5e7eb' }}>
-      <div className="px-6 py-4" style={{ background: ROGERS_GREEN }}>
-        <h2 className="text-white font-bold text-lg">Results</h2>
+      <div style={{ padding: "24px 24px 0 24px" }}>
+        <h2 style={{ fontSize: "22px", fontWeight: 700, color: "#111827" }}>Results</h2>
       </div>
       <div>
         {completed.map((g, idx) => {
