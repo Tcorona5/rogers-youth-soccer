@@ -186,14 +186,14 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
             <tr style={{ background: '#f8fafc', borderBottom: '2px solid #cbd5e1' }}>
               <th className="text-left py-4 pl-6 pr-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '52px' }}>#</th>
               <th className="text-left py-4 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Team</th>
-              <th className="text-center py-4 px-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '72px' }}>P</th>
-              <th className="text-center py-4 px-2 text-xs font-bold uppercase tracking-wider" style={{ width: '72px', color: '#16a34a' }}>W</th>
-              <th className="text-center py-4 px-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '72px' }}>D</th>
-              <th className="text-center py-4 px-2 text-xs font-bold uppercase tracking-wider" style={{ width: '72px', color: '#dc2626' }}>L</th>
-              <th className="text-center py-4 px-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '72px' }}>GF</th>
-              <th className="text-center py-4 px-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '72px' }}>GA</th>
-              <th className="text-center py-4 px-2 text-xs font-bold text-gray-400 uppercase tracking-wider" style={{ width: '80px' }}>GD</th>
-              <th className="text-center py-4 pl-2 pr-6 text-xs font-bold uppercase tracking-wider" style={{ width: '80px', color: '#007A87' }}>PTS</th>
+              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>P</th>
+              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#16a34a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>W</th>
+              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>D</th>
+              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#dc2626', textTransform: 'uppercase', letterSpacing: '0.05em' }}>L</th>
+              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>GF</th>
+              <th style={{ textAlign: 'center', width: '72px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>GA</th>
+              <th style={{ textAlign: 'center', width: '80px', padding: '16px 8px', fontSize: '12px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>GD</th>
+              <th style={{ textAlign: 'center', width: '80px', padding: '16px 8px 16px 8px', fontSize: '12px', fontWeight: 700, color: '#007A87', textTransform: 'uppercase', letterSpacing: '0.05em' }}>PTS</th>
             </tr>
           </thead>
           <tbody>
@@ -213,17 +213,17 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
                     <span className="font-semibold text-gray-800">{row.team}</span>
                   </div>
                 </td>
-                <td className="py-5 px-2 text-center text-sm text-gray-600 font-medium">{row.gp}</td>
-                <td className="py-5 px-2 text-center text-sm font-bold" style={{ color: '#16a34a' }}>{row.w}</td>
-                <td className="py-5 px-2 text-center text-sm text-gray-500 font-medium">{row.d}</td>
-                <td className="py-5 px-2 text-center text-sm font-bold" style={{ color: row.l > 0 ? '#dc2626' : '#9ca3af' }}>{row.l}</td>
-                <td className="py-5 px-2 text-center text-sm text-gray-600 font-medium">{row.gf}</td>
-                <td className="py-5 px-2 text-center text-sm text-gray-600 font-medium">{row.ga}</td>
-                <td className={`py-5 px-2 text-center text-sm font-semibold ${row.gd > 0 ? 'text-green-600' : row.gd < 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                <td style={{ textAlign: 'center', fontSize: '14px', color: '#4b5563', fontWeight: 500 }}>{row.gp}</td>
+                <td style={{ textAlign: 'center', fontSize: '14px', color: '#16a34a', fontWeight: 700 }}>{row.w}</td>
+                <td style={{ textAlign: 'center', fontSize: '14px', color: '#6b7280', fontWeight: 500 }}>{row.d}</td>
+                <td style={{ textAlign: 'center', fontSize: '14px', color: row.l > 0 ? '#dc2626' : '#9ca3af', fontWeight: 700 }}>{row.l}</td>
+                <td style={{ textAlign: 'center', fontSize: '14px', color: '#4b5563', fontWeight: 500 }}>{row.gf}</td>
+                <td style={{ textAlign: 'center', fontSize: '14px', color: '#4b5563', fontWeight: 500 }}>{row.ga}</td>
+                <td style={{ textAlign: 'center', fontSize: '14px', fontWeight: 600, color: row.gd > 0 ? '#16a34a' : row.gd < 0 ? '#dc2626' : '#9ca3af' }}>
                   {row.gd > 0 ? `+${row.gd}` : row.gd}
                 </td>
-                <td className="py-5 pl-2 pr-6 text-center">
-                  <span className="text-base font-black" style={{ color: '#0A1628' }}>{row.pts}</span>
+                <td style={{ textAlign: 'center', paddingRight: '24px' }}>
+                  <span style={{ fontSize: '15px', fontWeight: 900, color: '#0A1628' }}>{row.pts}</span>
                 </td>
               </tr>
             ))}
