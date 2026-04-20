@@ -45,15 +45,6 @@ function computeStandings(games: Game[]): StandingsRow[] {
   )
 }
 
-function formatDate(dateStr: string | null, timeStr: string | null): string {
-  if (!dateStr) return ''
-  try {
-    const d = new Date(dateStr + 'T12:00:00')
-    const date = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-    return timeStr ? `${date} · ${timeStr}` : date
-  } catch { return dateStr }
-}
-
 export default function HomePage() {
   const [activeDiv, setActiveDiv] = useState('u9b')
   const [games, setGames] = useState<Game[]>([])
@@ -321,4 +312,3 @@ function formatDate(dateStr: string | null, timeStr: string | null): string {
     return timeStr ? `${date} · ${timeStr}` : date
   } catch { return dateStr }
 }
-
