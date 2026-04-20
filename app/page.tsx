@@ -107,12 +107,16 @@ export default function HomePage() {
 
       {/* Navbar — Rogers green, clean like adult site */}
       <header style={{ background: ROGERS_GREEN }} className="shadow-md">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div>
-            <h1 style={{ color: "white", fontWeight: 700, fontSize: "24px", letterSpacing: "-0.5px" }}>Rogers Youth Soccer</h1>
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
+          {/* Logo */}
+          <img src="/Logo_White.png" alt="Rogers Parks & Recreation" style={{ height: '52px', width: 'auto', flexShrink: 0 }} />
+          {/* Title */}
+          <div style={{ flex: 1 }}>
+            <h1 style={{ color: "white", fontWeight: 700, fontSize: "22px", letterSpacing: "-0.5px", lineHeight: 1.2 }}>Rogers Youth Soccer</h1>
             <p style={{ color: "white", fontSize: "13px", marginTop: "2px", opacity: 0.85 }}>Spring 2026 · Rogers Activity Center</p>
           </div>
-          <div className="text-right hidden sm:block">
+          {/* World Cup tag */}
+          <div className="hidden sm:block" style={{ flexShrink: 0 }}>
             <span style={{ color: "white", fontSize: "13px", opacity: 0.85 }}>🌍 World Cup Season</span>
           </div>
         </div>
