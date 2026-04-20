@@ -151,7 +151,7 @@ export default function HomePage() {
         )}
       </div>
 
-      <footer style={{ background: '#0A1628' }} className="mt-12 py-6">
+      <footer style={{ background: '#D80027' }} className="mt-12 py-6">
         <div className="max-w-5xl mx-auto px-4 text-center">
           <p className="text-white text-sm font-medium">Rogers Activity Center · Spring 2026</p>
           <p className="text-red-200 text-xs mt-1">For questions contact Rogers Parks &amp; Recreation</p>
@@ -175,9 +175,9 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
       {/* Table header bar */}
-      <div className="px-6 py-4 border-b border-gray-200" style={{ background: '#D80027' }}>
+      <div className="px-6 py-4 border-b border-gray-200" style={{ background: '#0033A0' }}>
         <h2 className="text-white font-bold text-sm tracking-widest uppercase">Standings</h2>
-        <p className="text-red-200 text-xs mt-0.5">Win 3 pts · Draw 1 pt · Loss 0 pts</p>
+        <p className="text-blue-200 text-xs mt-0.5">Win 3 pts · Draw 1 pt · Loss 0 pts</p>
       </div>
 
       <div className="overflow-x-auto">
