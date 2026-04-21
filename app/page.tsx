@@ -125,6 +125,18 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* Nav tabs */}
+      <div style={{ background: 'white', borderBottom: '1px solid #e5e7eb', padding: '0 20px' }}>
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <a href="/" style={{ padding: '14px 16px', fontSize: '14px', fontWeight: 700, color: ROGERS_GREEN, textDecoration: 'none', borderBottom: `2px solid ${ROGERS_GREEN}` }}>
+            Standings &amp; Results
+          </a>
+          <a href="/playoffs" style={{ padding: '14px 16px', fontSize: '14px', fontWeight: 500, color: '#6b7280', textDecoration: 'none', borderBottom: '2px solid transparent' }}>
+            🏆 Playoffs
+          </a>
+        </div>
+      </div>
+
       <div className="max-w-5xl mx-auto px-6 py-8">
 
         {/* Division selector */}
