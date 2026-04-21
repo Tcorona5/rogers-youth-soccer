@@ -99,7 +99,12 @@ export default function HomePage() {
 
   const standings = computeStandings(games)
   const completed = games
-    .filter(g => !g.is_cancelled && g.home_score !== null && g.counts_for_standings)
+    .filter(g => {
+      if (!g.counts_for_standings) return false
+      if (g.home_score !== null) return true
+      if (g.status === 'rained_out_no_makeup' || g.status === 'rained_out_makeup_tbd') return true
+      return false
+    })
     .sort((a, b) => (b.game_date || '').localeCompare(a.game_date || ''))
 
   return (
@@ -268,20 +273,42 @@ function ResultsTable({ completed }: { completed: Game[] }) {
         {completed.map((g, idx) => {
           const homeWon = (g.home_score ?? 0) > (g.away_score ?? 0)
           const awayWon = (g.away_score ?? 0) > (g.home_score ?? 0)
+          const isRainedOut = g.status === 'rained_out_no_makeup' || g.status === 'rained_out_makeup_tbd'
+          const rainedOutLabel = g.status === 'rained_out_no_makeup' ? '🌧️ Rained Out · No Makeup' : '🌧️ Rained Out · Makeup TBD'
+
           return (
             <div
               key={g.id}
-              style={{ borderBottom: idx < completed.length - 1 ? '1px solid #f3f4f6' : 'none', padding: '16px 24px' }}
+              style={{ borderBottom: idx < completed.length - 1 ? '1px solid #f3f4f6' : 'none', padding: '16px 24px', background: isRainedOut ? '#fafafa' : 'white' }}
             >
               <p style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '8px' }}>
                 {formatDate(g.game_date, g.game_time)}{g.field ? ` · ${g.field}` : ''}
               </p>
+              {isRainedOut ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, opacity: 0.6 }}>
+                    <FlagImg emoji={g.home_flag} size={22} name={g.home_team} />
+                    <span style={{ fontSize: '14px', fontWeight: 500, color: '#6b7280' }}>
+                      {Array.from(g.home_team).filter(c => { const cp = c.codePointAt(0) || 0; return cp < 0x1F3F4 || (cp > 0x1F3F4 && cp < 0xE0000) || cp > 0xE007F; }).join('').trim()}
+                    </span>
+                  </div>
+                  <div style={{ background: '#fef3c7', border: '1px solid #fcd34d', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', fontWeight: 600, color: '#92400e', whiteSpace: 'nowrap' }}>
+                    {rainedOutLabel}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, justifyContent: 'flex-end', opacity: 0.6 }}>
+                    <span style={{ fontSize: '14px', fontWeight: 500, color: '#6b7280' }}>
+                      {Array.from(g.away_team).filter(c => { const cp = c.codePointAt(0) || 0; return cp < 0x1F3F4 || (cp > 0x1F3F4 && cp < 0xE0000) || cp > 0xE007F; }).join('').trim()}
+                    </span>
+                    <FlagImg emoji={g.away_flag} size={22} name={g.away_team} />
+                  </div>
+                </div>
+              ) : (
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 {/* Home */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, opacity: homeWon ? 1 : 0.5 }}>
                   <FlagImg emoji={g.home_flag} size={22} name={g.home_team} />
                   <span style={{ fontSize: '14px', fontWeight: homeWon ? 700 : 500, color: homeWon ? '#111827' : '#6b7280' }}>
-                    {g.home_team}
+                    {Array.from(g.home_team).filter(c => { const cp = c.codePointAt(0) || 0; return cp < 0x1F3F4 || (cp > 0x1F3F4 && cp < 0xE0000) || cp > 0xE007F; }).join('').trim()}
                   </span>
                 </div>
                 {/* Score */}
@@ -297,11 +324,12 @@ function ResultsTable({ completed }: { completed: Game[] }) {
                 {/* Away */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, justifyContent: 'flex-end', opacity: awayWon ? 1 : 0.5 }}>
                   <span style={{ fontSize: '14px', fontWeight: awayWon ? 700 : 500, color: awayWon ? '#111827' : '#6b7280' }}>
-                    {g.away_team}
+                    {Array.from(g.away_team).filter(c => { const cp = c.codePointAt(0) || 0; return cp < 0x1F3F4 || (cp > 0x1F3F4 && cp < 0xE0000) || cp > 0xE007F; }).join('').trim()}
                   </span>
                   <FlagImg emoji={g.away_flag} size={22} name={g.away_team} />
                 </div>
               </div>
+              )}
             </div>
           )
         })}
