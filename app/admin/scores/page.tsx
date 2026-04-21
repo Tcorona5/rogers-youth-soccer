@@ -16,11 +16,29 @@ const DIVISIONS = [
   { slug: 'u18',  name: 'U18 Co-Ed' },
 ]
 
+const ROGERS_GREEN = '#2D7A3A'
+
 type ScoreEdit = { home: string; away: string }
+
+function cleanTeamName(name: string): string {
+  return Array.from(name).filter(c => {
+    const cp = c.codePointAt(0) || 0
+    return cp < 0x1F3F4 || (cp > 0x1F3F4 && cp < 0xE0000) || cp > 0xE007F
+  }).join('').trim()
+}
+
+function formatDate(d: string | null, t: string | null): string {
+  if (!d) return ''
+  try {
+    const dt = new Date(d + 'T12:00:00')
+    const date = dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+    return t ? `${date} · ${t}` : date
+  } catch { return d }
+}
 
 export default function AdminScores() {
   const router = useRouter()
-  const [activeDiv, setActiveDiv] = useState('u7b')
+  const [activeDiv, setActiveDiv] = useState('u9b')
   const [games, setGames] = useState<Game[]>([])
   const [loading, setLoading] = useState(true)
   const [edits, setEdits] = useState<Record<number, ScoreEdit>>({})
@@ -73,190 +91,228 @@ export default function AdminScores() {
     setGames(prev => prev.map(g => g.id === game.id ? { ...g, home_score: null, away_score: null } : g))
   }
 
-  const displayedGames = filterUnscored
-    ? games.filter(g => !g.is_cancelled && g.home_score === null)
-    : games.filter(g => !g.is_cancelled)
+  const displayedGames = games.filter(g => {
+    if (g.is_cancelled) return false
+    if (filterUnscored) return g.home_score === null
+    return true
+  })
 
-  const formatDate = (d: string | null, t: string | null) => {
-    if (!d) return ''
-    try {
-      const dt = new Date(d + 'T12:00:00')
-      return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) + (t ? ` · ${t}` : '')
-    } catch { return d }
+  const scoredCount = games.filter(g => !g.is_cancelled && g.home_score !== null).length
+  const totalCount = games.filter(g => !g.is_cancelled).length
+
+  // Group games by date
+  const grouped: Record<string, Game[]> = {}
+  for (const g of displayedGames) {
+    const key = g.game_date || 'Unknown'
+    if (!grouped[key]) grouped[key] = []
+    grouped[key].push(g)
   }
+  const sortedDates = Object.keys(grouped).sort()
 
   return (
-    <div className="min-h-screen" style={{ background: '#f8fafc' }}>
-      {/* Header */}
-      <header style={{ background: '#0A1628' }} className="shadow-lg">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+    <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif' }}>
+
+      {/* Top navbar */}
+      <header style={{ background: ROGERS_GREEN, padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '60px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <img src="/Logo_White.png" alt="Rogers" style={{ height: '36px', width: 'auto' }} />
           <div>
-            <h1 className="text-white font-bold">Score Entry</h1>
-            <p className="text-gray-400 text-xs">Rogers Youth Soccer Admin</p>
-          </div>
-          <div className="flex gap-3">
-            <a href="/" target="_blank" className="text-gray-400 hover:text-white text-sm transition-colors">
-              View Site →
-            </a>
-            <button
-              onClick={() => { sessionStorage.removeItem('rys_admin'); router.replace('/admin/login') }}
-              className="text-gray-400 hover:text-white text-sm transition-colors"
-            >
-              Log Out
-            </button>
+            <p style={{ color: 'white', fontWeight: 700, fontSize: '15px', lineHeight: 1.2 }}>Score Entry</p>
+            <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '11px' }}>Rogers Youth Soccer Admin</p>
           </div>
         </div>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <a href="/" target="_blank" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', textDecoration: 'none' }}>
+            View Site →
+          </a>
+          <button
+            onClick={() => { sessionStorage.removeItem('rys_admin'); router.replace('/admin/login') }}
+            style={{ background: 'rgba(255,255,255,0.15)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '6px', padding: '6px 14px', fontSize: '13px', cursor: 'pointer' }}
+          >
+            Log Out
+          </button>
+        </div>
       </header>
-      <div style={{ background: '#C8A84B', height: '3px' }} />
 
-      <div className="max-w-5xl mx-auto px-4 py-6">
-        {/* Division picker */}
-        <div className="mb-5">
-          <div className="flex gap-2 flex-wrap">
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '32px 24px' }}>
+
+        {/* Page title */}
+        <div style={{ marginBottom: '24px' }}>
+          <h1 style={{ fontSize: '26px', fontWeight: 700, color: '#111827', margin: 0 }}>Enter Scores</h1>
+          <p style={{ color: '#6b7280', fontSize: '14px', marginTop: '4px' }}>Record final results for completed games</p>
+        </div>
+
+        {/* Division + filter bar */}
+        <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', padding: '16px 20px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {DIVISIONS.map(d => (
               <button
                 key={d.slug}
                 onClick={() => setActiveDiv(d.slug)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  activeDiv === d.slug
-                    ? 'text-white shadow'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-400'
-                }`}
-                style={activeDiv === d.slug ? { background: '#0A1628' } : {}}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '20px',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  border: activeDiv === d.slug ? 'none' : '1px solid #d1d5db',
+                  background: activeDiv === d.slug ? ROGERS_GREEN : 'white',
+                  color: activeDiv === d.slug ? 'white' : '#374151',
+                  boxShadow: activeDiv === d.slug ? '0 2px 6px rgba(45,122,58,0.3)' : 'none',
+                }}
               >
                 {d.name}
               </button>
             ))}
           </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <span style={{ fontSize: '13px', color: '#6b7280' }}>
+              <strong style={{ color: '#111827' }}>{scoredCount}</strong> of <strong style={{ color: '#111827' }}>{totalCount}</strong> scored
+            </span>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#374151', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={filterUnscored}
+                onChange={e => setFilterUnscored(e.target.checked)}
+                style={{ width: '14px', height: '14px' }}
+              />
+              Unscored only
+            </label>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-gray-500 text-sm">
-            {games.filter(g => !g.is_cancelled && g.home_score !== null).length} of{' '}
-            {games.filter(g => !g.is_cancelled).length} games scored
-          </p>
-          <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={filterUnscored}
-              onChange={e => setFilterUnscored(e.target.checked)}
-              className="rounded"
-            />
-            Show unscored only
-          </label>
-        </div>
-
+        {/* Games list */}
         {loading ? (
-          <div className="text-center py-12 text-gray-400">Loading…</div>
+          <div style={{ textAlign: 'center', padding: '60px', color: '#9ca3af' }}>Loading…</div>
+        ) : sortedDates.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '60px', color: '#9ca3af' }}>
+            {filterUnscored ? 'All games are scored! 🎉' : 'No games found.'}
+          </div>
         ) : (
-          <div className="space-y-2">
-            {displayedGames.map(game => {
-              const edit = edits[game.id]
-              const hasEdit = edit && (edit.home !== '' || edit.away !== '')
-              const isSaving = saving === game.id
-              const wasSaved = saved === game.id
-              const notCounting = !game.counts_for_standings
+          <div>
+            {sortedDates.map(date => (
+              <div key={date} style={{ marginBottom: '24px' }}>
+                {/* Date header */}
+                <p style={{ fontSize: '11px', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px', paddingLeft: '4px' }}>
+                  {formatDate(date, null)}
+                </p>
 
-              return (
-                <div
-                  key={game.id}
-                  className={`bg-white rounded-xl border p-4 ${notCounting ? 'opacity-60' : ''} ${wasSaved ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}
-                >
-                  <div className="flex items-center gap-3 flex-wrap">
-                    {/* Game info */}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 text-xs text-gray-400 mb-1">
-                        <span className="font-mono">#{game.game_number}</span>
-                        <span>·</span>
-                        <span>{formatDate(game.game_date, game.game_time)}</span>
-                        {game.field && <><span>·</span><span>{game.field}</span></>}
-                        {notCounting && <span className="text-orange-400 font-medium">(away game)</span>}
-                      </div>
-                      <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                        <span>{game.home_flag}</span>
-                        <span>{game.home_team}</span>
-                        <span className="text-gray-300">vs</span>
-                        <span>{game.away_team}</span>
-                        <span>{game.away_flag}</span>
-                      </div>
-                    </div>
+                {/* Game cards */}
+                <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+                  {grouped[date].map((game, idx) => {
+                    const edit = edits[game.id]
+                    const hasEdit = edit && (edit.home !== '' || edit.away !== '')
+                    const isSaving = saving === game.id
+                    const wasSaved = saved === game.id
+                    const notCounting = !game.counts_for_standings
+                    const isScored = game.home_score !== null
 
-                    {/* Score entry */}
-                    <div className="flex items-center gap-2 shrink-0">
-                      {game.home_score !== null && !hasEdit ? (
-                        <>
-                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 text-sm font-bold text-gray-700">
-                            <span>{game.home_score}</span>
-                            <span className="text-gray-400">–</span>
-                            <span>{game.away_score}</span>
-                          </div>
-                          <button
-                            onClick={() => setEdits(prev => ({
-                              ...prev,
-                              [game.id]: { home: String(game.home_score), away: String(game.away_score) }
-                            }))}
-                            className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1 rounded"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => clearScore(game)}
-                            className="text-xs text-red-400 hover:text-red-600 px-2 py-1 rounded"
-                          >
-                            Clear
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <input
-                            type="number"
-                            min="0"
-                            max="99"
-                            placeholder="H"
-                            value={edit?.home ?? ''}
-                            onChange={e => setEdit(game.id, 'home', e.target.value)}
-                            className="w-14 text-center border border-gray-300 rounded-lg px-2 py-1.5 text-sm font-bold focus:outline-none focus:ring-2"
-                            style={{ '--tw-ring-color': '#007A87' } as React.CSSProperties}
-                          />
-                          <span className="text-gray-400 font-light">–</span>
-                          <input
-                            type="number"
-                            min="0"
-                            max="99"
-                            placeholder="A"
-                            value={edit?.away ?? ''}
-                            onChange={e => setEdit(game.id, 'away', e.target.value)}
-                            className="w-14 text-center border border-gray-300 rounded-lg px-2 py-1.5 text-sm font-bold focus:outline-none focus:ring-2"
-                            style={{ '--tw-ring-color': '#007A87' } as React.CSSProperties}
-                          />
-                          <button
-                            onClick={() => saveScore(game)}
-                            disabled={!hasEdit || isSaving}
-                            className={`px-3 py-1.5 rounded-lg text-sm font-semibold text-white transition-all disabled:opacity-40 ${wasSaved ? 'bg-green-500' : ''}`}
-                            style={!wasSaved ? { background: '#007A87' } : {}}
-                          >
-                            {isSaving ? '…' : wasSaved ? '✓' : 'Save'}
-                          </button>
-                          {hasEdit && (
-                            <button
-                              onClick={() => setEdits(prev => { const n = { ...prev }; delete n[game.id]; return n })}
-                              className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1"
-                            >
-                              Cancel
-                            </button>
+                    return (
+                      <div
+                        key={game.id}
+                        style={{
+                          padding: '16px 20px',
+                          borderBottom: idx < grouped[date].length - 1 ? '1px solid #f3f4f6' : 'none',
+                          background: wasSaved ? '#f0fdf4' : 'white',
+                          opacity: notCounting ? 0.55 : 1,
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '16px',
+                          flexWrap: 'wrap',
+                        }}
+                      >
+                        {/* Division badge + time */}
+                        <div style={{ minWidth: '120px' }}>
+                          <span style={{ fontSize: '11px', fontWeight: 700, color: ROGERS_GREEN, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                            {DIVISIONS.find(d => d.slug === game.division_slug)?.name}
+                          </span>
+                          {game.game_time && (
+                            <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '2px' }}>{game.game_time}</p>
                           )}
-                        </>
-                      )}
-                    </div>
-                  </div>
+                          {notCounting && (
+                            <p style={{ fontSize: '11px', color: '#f59e0b', marginTop: '2px' }}>Away game</p>
+                          )}
+                        </div>
+
+                        {/* Teams */}
+                        <div style={{ flex: 1, minWidth: '200px' }}>
+                          <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827' }}>
+                            {cleanTeamName(game.home_team)}
+                            <span style={{ color: '#d1d5db', fontWeight: 400, margin: '0 8px' }}>vs</span>
+                            {cleanTeamName(game.away_team)}
+                          </p>
+                          {game.field && (
+                            <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '2px' }}>
+                              #{game.game_number} · {game.field}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Score entry */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          {isScored && !hasEdit ? (
+                            <>
+                              <div style={{ background: '#f3f4f6', borderRadius: '8px', padding: '8px 16px', fontSize: '18px', fontWeight: 700, color: '#111827', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span>{game.home_score}</span>
+                                <span style={{ color: '#d1d5db', fontWeight: 300 }}>–</span>
+                                <span>{game.away_score}</span>
+                              </div>
+                              <button
+                                onClick={() => setEdits(prev => ({ ...prev, [game.id]: { home: String(game.home_score), away: String(game.away_score) } }))}
+                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #d1d5db', background: 'white', color: '#374151', fontSize: '12px', cursor: 'pointer' }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => clearScore(game)}
+                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #fca5a5', background: 'white', color: '#dc2626', fontSize: '12px', cursor: 'pointer' }}
+                              >
+                                Clear
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <input
+                                type="number" min="0" max="99" placeholder="H"
+                                value={edit?.home ?? ''}
+                                onChange={e => setEdit(game.id, 'home', e.target.value)}
+                                style={{ width: '56px', textAlign: 'center', border: '1px solid #d1d5db', borderRadius: '8px', padding: '8px', fontSize: '16px', fontWeight: 700, outline: 'none' }}
+                              />
+                              <span style={{ color: '#9ca3af', fontSize: '16px' }}>–</span>
+                              <input
+                                type="number" min="0" max="99" placeholder="A"
+                                value={edit?.away ?? ''}
+                                onChange={e => setEdit(game.id, 'away', e.target.value)}
+                                style={{ width: '56px', textAlign: 'center', border: '1px solid #d1d5db', borderRadius: '8px', padding: '8px', fontSize: '16px', fontWeight: 700, outline: 'none' }}
+                              />
+                              <button
+                                onClick={() => saveScore(game)}
+                                disabled={!hasEdit || isSaving}
+                                style={{
+                                  padding: '8px 20px', borderRadius: '8px', border: 'none',
+                                  background: wasSaved ? '#16a34a' : hasEdit ? ROGERS_GREEN : '#d1d5db',
+                                  color: 'white', fontSize: '13px', fontWeight: 600, cursor: hasEdit ? 'pointer' : 'not-allowed',
+                                }}
+                              >
+                                {isSaving ? '…' : wasSaved ? '✓ Saved' : 'Save'}
+                              </button>
+                              {hasEdit && (
+                                <button
+                                  onClick={() => setEdits(prev => { const n = { ...prev }; delete n[game.id]; return n })}
+                                  style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #d1d5db', background: 'white', color: '#6b7280', fontSize: '13px', cursor: 'pointer' }}
+                                >
+                                  Cancel
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
-              )
-            })}
-            {displayedGames.length === 0 && (
-              <div className="text-center py-8 text-gray-400">
-                {filterUnscored ? 'All games are scored! 🎉' : 'No games found.'}
               </div>
-            )}
+            ))}
           </div>
         )}
       </div>
