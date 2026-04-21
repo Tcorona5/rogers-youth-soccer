@@ -20,6 +20,7 @@ export type Game = {
   away_score: number | null
   is_cancelled: boolean
   counts_for_standings: boolean
+  status: string | null
 }
 
 export type Division = {
