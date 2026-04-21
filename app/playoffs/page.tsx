@@ -347,15 +347,60 @@ export default function PlayoffsPage() {
           <p style={{ color: '#6b7280', fontSize: '14px', marginTop: '4px' }}>Single elimination · All divisions</p>
         </div>
 
-        {/* Disclaimer */}
-        <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: '10px', padding: '14px 18px', marginBottom: '28px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-          <span style={{ fontSize: '20px', flexShrink: 0 }}>⚠️</span>
-          <div>
-            <p style={{ fontSize: '13px', fontWeight: 700, color: '#92400e', margin: 0 }}>Playoff Schedule — Dates &amp; Times Only</p>
-            <p style={{ fontSize: '13px', color: '#92400e', marginTop: '4px', lineHeight: 1.5 }}>
-              The matchups below show scheduled dates, times, and fields for each round.
-              <strong> Team assignments are not finalized until after the last regular season game.</strong> Please do not use this page to determine when your team plays — check back after the regular season ends.
+        {/* Disclaimer + Rules */}
+        <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: '10px', padding: '20px 24px', marginBottom: '28px' }}>
+          
+          {/* Schedule notice */}
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '20px' }}>
+            <span style={{ fontSize: '20px', flexShrink: 0 }}>⚠️</span>
+            <div>
+              <p style={{ fontSize: '14px', fontWeight: 700, color: '#92400e', margin: 0 }}>Playoff Schedule — Dates &amp; Times Only</p>
+              <p style={{ fontSize: '13px', color: '#92400e', marginTop: '4px', lineHeight: 1.6 }}>
+                The matchups below show scheduled dates, times, and fields for each round.
+                <strong> Team assignments are not finalized until after the last regular season game.</strong> Please do not use this page to determine when your team plays — check back after the regular season ends.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ borderTop: '1px solid #fcd34d', paddingTop: '20px' }}>
+
+            {/* Overtime Rules */}
+            <p style={{ fontSize: '14px', fontWeight: 700, color: '#78350f', margin: '0 0 12px 0' }}>⏱️ Overtime &amp; Tiebreaker Rules</p>
+            <p style={{ fontSize: '13px', color: '#92400e', margin: '0 0 10px 0', lineHeight: 1.6, fontStyle: 'italic' }}>
+              If a playoff match is tied at the end of regulation, the following tiebreaker procedure will apply:
             </p>
+
+            <p style={{ fontSize: '13px', fontWeight: 700, color: '#78350f', margin: '0 0 4px 0' }}>Overtime — Golden Goal Format</p>
+            <p style={{ fontSize: '13px', color: '#92400e', margin: '0 0 8px 0', lineHeight: 1.6 }}>
+              Two five-minute overtime periods will be played. The golden goal rule is in effect, meaning the first team to score immediately wins the match — play stops the moment a goal is scored. If no goal is scored after both overtime periods, the match proceeds to penalty kicks.
+            </p>
+            <div style={{ background: 'rgba(255,255,255,0.5)', border: '1px solid #fcd34d', borderRadius: '6px', padding: '8px 12px', marginBottom: '14px' }}>
+              <p style={{ fontSize: '12px', color: '#92400e', margin: 0, lineHeight: 1.5 }}>
+                💡 <em>What is a golden goal? It&apos;s sudden death. The first team to score wins instantly, no matter how much time is left.</em>
+              </p>
+            </div>
+
+            <p style={{ fontSize: '13px', fontWeight: 700, color: '#78350f', margin: '0 0 4px 0' }}>Penalty Kicks</p>
+            <p style={{ fontSize: '13px', color: '#92400e', margin: '0 0 8px 0', lineHeight: 1.6 }}>
+              Each team selects five players to attempt a penalty kick from the penalty spot. A coin toss determines which team kicks first. After all five kicks, the team with the most goals wins. If still tied, kicks continue one at a time, alternating teams, until one team scores and the other does not on the same round. No player may take a second kick until every eligible player on their roster has taken one.
+            </p>
+            <div style={{ background: 'rgba(255,255,255,0.5)', border: '1px solid #fcd34d', borderRadius: '6px', padding: '8px 12px', marginBottom: '20px' }}>
+              <p style={{ fontSize: '12px', color: '#92400e', margin: 0, lineHeight: 1.5 }}>
+                💡 <em>What are penalty kicks? Each player takes a one-on-one kick against the goalkeeper from close range. It&apos;s the fairest way to decide a tied match.</em>
+              </p>
+            </div>
+
+            {/* Sportsmanship */}
+            <div style={{ borderTop: '1px solid #fcd34d', paddingTop: '16px' }}>
+              <p style={{ fontSize: '14px', fontWeight: 700, color: '#78350f', margin: '0 0 10px 0' }}>🤝 Sportsmanship &amp; Conduct</p>
+              <p style={{ fontSize: '13px', color: '#92400e', margin: '0 0 8px 0', lineHeight: 1.6 }}>
+                The Rogers Youth Soccer playoffs are a celebration of what our players have accomplished this season. We ask that all players, coaches, and spectators continue to model the same positive behavior expected throughout the regular season. Cheer loudly, compete hard, and win or lose with grace.
+              </p>
+              <p style={{ fontSize: '13px', color: '#92400e', margin: 0, lineHeight: 1.6 }}>
+                Verbal abuse, aggressive behavior, or unsportsmanlike conduct directed at players, coaches, referees, or opposing families will not be tolerated under any circumstances. Any individual who violates this standard will be asked to leave the facility immediately. Let&apos;s make this a playoff experience our kids will remember for all the right reasons.
+              </p>
+            </div>
+
           </div>
         </div>
 
