@@ -85,6 +85,19 @@ export default function AdminScores() {
     setEdits(prev => { const n = { ...prev }; delete n[game.id]; return n })
   }
 
+  const updateStatus = async (game: Game, status: string) => {
+    const updates: Record<string, unknown> = { status }
+    if (status === 'rained_out_no_makeup' || status === 'rained_out_makeup_tbd') {
+      updates.is_cancelled = true
+      updates.home_score = null
+      updates.away_score = null
+    } else if (status === 'pending') {
+      updates.is_cancelled = false
+    }
+    await supabase.from('games').update(updates).eq('id', game.id)
+    setGames(prev => prev.map(g => g.id === game.id ? { ...g, ...updates } as Game : g))
+  }
+
   const clearScore = async (game: Game) => {
     if (!confirm(`Clear score for Game #${game.game_number}?`)) return
     await supabase.from('games').update({ home_score: null, away_score: null }).eq('id', game.id)
@@ -248,9 +261,38 @@ export default function AdminScores() {
                           )}
                         </div>
 
+                        {/* Status dropdown */}
+                        <div style={{ minWidth: '180px' }}>
+                          <select
+                            value={game.status || 'pending'}
+                            onChange={e => updateStatus(game, e.target.value)}
+                            style={{
+                              width: '100%',
+                              padding: '7px 10px',
+                              borderRadius: '8px',
+                              border: '1px solid #d1d5db',
+                              fontSize: '12px',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              background: 'white',
+                              color: game.status === 'rained_out_no_makeup' ? '#dc2626'
+                                   : game.status === 'rained_out_makeup_tbd' ? '#f59e0b'
+                                   : game.status === 'final' ? '#16a34a'
+                                   : '#374151',
+                            }}
+                          >
+                            <option value="pending">⏳ Pending</option>
+                            <option value="final">✅ Final</option>
+                            <option value="rained_out_no_makeup">🌧️ Rained Out · No Makeup</option>
+                            <option value="rained_out_makeup_tbd">🌧️ Rained Out · Makeup TBD</option>
+                          </select>
+                        </div>
+
                         {/* Score entry */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          {isScored && !hasEdit ? (
+                          {(game.status === 'rained_out_no_makeup' || game.status === 'rained_out_makeup_tbd') ? (
+                            <div style={{ fontSize: '13px', color: '#9ca3af', fontStyle: 'italic' }}>No score needed</div>
+                          ) : isScored && !hasEdit ? (
                             <>
                               <div style={{ background: '#f3f4f6', borderRadius: '8px', padding: '8px 16px', fontSize: '18px', fontWeight: 700, color: '#111827', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <span>{game.home_score}</span>
