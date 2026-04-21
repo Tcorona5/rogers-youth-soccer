@@ -10,6 +10,7 @@ const DIVISIONS = [
 ]
 
 type Game = {
+  gameNumber?: string
   matchup: string
   time?: string
   field?: string
@@ -32,101 +33,68 @@ type DivisionSchedule = {
 
 const PLAYOFF_DATA: DivisionSchedule[] = [
   {
-    division: 'U9 Girls',
-    rounds: [
-      {
-        round: 'Quarterfinals', date: 'May 9, 2026', location: 'Veterans Park',
-        games: [
-          { matchup: 'Seed 1 vs Seed 8', time: '9:00 AM',  field: 'V2B' },
-          { matchup: 'Seed 4 vs Seed 5', time: '10:30 AM', field: 'V2B' },
-          { matchup: 'Seed 3 vs Seed 6', time: '12:00 PM', field: 'V2B' },
-          { matchup: 'Seed 2 vs Seed 7', time: '1:30 PM',  field: 'V2B' },
-        ],
-      },
-      {
-        round: 'Semifinals', date: 'May 14, 2026', location: 'Veterans Park',
-        games: [
-          { matchup: 'TBD vs TBD', time: '6:00 PM', field: 'V2A' },
-          { matchup: 'TBD vs TBD', time: '7:30 PM', field: 'V2A' },
-        ],
-      },
-      {
-        round: 'Championship', date: 'May 16, 2026', location: 'Hebron Park',
-        games: [
-          { matchup: 'TBD vs TBD', time: '9:00 AM', field: 'H3' },
-        ],
-      },
-    ],
-  },
-  {
     division: 'U9 Boys',
     rounds: [
       {
         round: 'First Round', date: 'May 4–5, 2026', location: 'Veterans Park',
         games: [
-          { matchup: 'Seed 8 vs Seed 9',  date: 'May 4', time: '6:00 PM',  field: 'V2A' },
-          { matchup: 'Seed 1',            note: 'Bye' },
-          { matchup: 'Seed 4 vs Seed 13', date: 'May 5', time: '6:00 PM',  field: 'V2A' },
-          { matchup: 'Seed 5 vs Seed 12', date: 'May 5', time: '7:30 PM',  field: 'V2A' },
-          { matchup: 'Seed 7 vs Seed 10', date: 'May 4', time: '7:30 PM',  field: 'V2A' },
-          { matchup: 'Seed 2',            note: 'Bye' },
-          { matchup: 'Seed 3 vs Seed 14', date: 'May 5', time: '6:00 PM',  field: 'V2B' },
-          { matchup: 'Seed 6 vs Seed 11', date: 'May 5', time: '7:30 PM',  field: 'V2B' },
+          { gameNumber: '901', matchup: 'Seed 8 vs Seed 9',  date: 'May 4', time: '6:00 PM',  field: 'V2A' },
+          { matchup: 'Seed 1', note: 'Bye' },
+          { gameNumber: '903', matchup: 'Seed 4 vs Seed 13', date: 'May 5', time: '6:00 PM',  field: 'V2A' },
+          { gameNumber: '905', matchup: 'Seed 5 vs Seed 12', date: 'May 5', time: '7:30 PM',  field: 'V2A' },
+          { gameNumber: '907', matchup: 'Seed 7 vs Seed 10', date: 'May 4', time: '7:30 PM',  field: 'V2A' },
+          { matchup: 'Seed 2', note: 'Bye' },
+          { gameNumber: '909', matchup: 'Seed 3 vs Seed 14', date: 'May 5', time: '6:00 PM',  field: 'V2B' },
+          { gameNumber: '911', matchup: 'Seed 6 vs Seed 11', date: 'May 5', time: '7:30 PM',  field: 'V2B' },
         ],
       },
       {
         round: 'Quarterfinals', date: 'May 9, 2026', location: 'Veterans Park',
         games: [
-          { matchup: 'Seed 1 vs Winner R1', time: '9:00 AM',  field: 'V2A' },
-          { matchup: 'TBD vs TBD',          time: '10:30 AM', field: 'V2A' },
-          { matchup: 'Seed 2 vs Winner R1', time: '12:00 PM', field: 'V2A' },
-          { matchup: 'TBD vs TBD',          time: '1:30 PM',  field: 'V2A' },
+          { gameNumber: '913', matchup: 'Seed 1 vs Winner of Game 901', time: '9:00 AM',  field: 'V2A' },
+          { gameNumber: '915', matchup: 'Winner of Game 903 vs Winner of Game 905', time: '10:30 AM', field: 'V2A' },
+          { gameNumber: '917', matchup: 'Seed 2 vs Winner of Game 907', time: '12:00 PM', field: 'V2A' },
+          { gameNumber: '919', matchup: 'Winner of Game 909 vs Winner of Game 911', time: '1:30 PM',  field: 'V2A' },
         ],
       },
       {
         round: 'Semifinals', date: 'May 12, 2026', location: 'Veterans Park',
         games: [
-          { matchup: 'TBD vs TBD', time: '6:00 PM', field: 'V2A' },
-          { matchup: 'TBD vs TBD', time: '7:30 PM', field: 'V2A' },
+          { gameNumber: '921', matchup: 'Winner of Game 913 vs Winner of Game 915', time: '6:00 PM', field: 'V2A' },
+          { gameNumber: '923', matchup: 'Winner of Game 917 vs Winner of Game 919', time: '7:30 PM', field: 'V2A' },
         ],
       },
       {
         round: 'Championship', date: 'May 16, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'TBD vs TBD', time: '10:30 AM', field: 'H3' },
+          { gameNumber: '925', matchup: 'Winner of Game 921 vs Winner of Game 923', time: '10:30 AM', field: 'H3' },
         ],
       },
     ],
   },
   {
-    division: 'U11 Girls',
+    division: 'U9 Girls',
     rounds: [
       {
-        round: 'Play-in', date: 'May 5, 2026', location: 'Veterans Park',
+        round: 'Quarterfinals', date: 'May 9, 2026', location: 'Veterans Park',
         games: [
-          { matchup: 'Seed 8 vs Seed 9', time: '6:00 PM', field: 'V1A' },
+          { gameNumber: '902', matchup: 'Seed 1 vs Seed 8', time: '9:00 AM',  field: 'V2B' },
+          { gameNumber: '904', matchup: 'Seed 4 vs Seed 5', time: '10:30 AM', field: 'V2B' },
+          { gameNumber: '906', matchup: 'Seed 3 vs Seed 6', time: '12:00 PM', field: 'V2B' },
+          { gameNumber: '908', matchup: 'Seed 2 vs Seed 7', time: '1:30 PM',  field: 'V2B' },
         ],
       },
       {
-        round: 'Quarterfinals', date: 'May 9, 2026',
+        round: 'Semifinals', date: 'May 14, 2026', location: 'Veterans Park',
         games: [
-          { matchup: 'Seed 1 vs Play-in Winner', time: '9:00 AM',  location: 'Hebron Park',   field: 'H1N' },
-          { matchup: 'Seed 4 vs Seed 5',         time: '9:00 AM',  location: 'Veterans Park', field: 'V1A' },
-          { matchup: 'Seed 2 vs Seed 7',         time: '10:30 AM', location: 'Hebron Park',   field: 'H1N' },
-          { matchup: 'Seed 3 vs Seed 6',         time: '10:30 AM', location: 'Veterans Park', field: 'V1A' },
-        ],
-      },
-      {
-        round: 'Semifinals', date: 'May 12, 2026', location: 'Hebron Park',
-        games: [
-          { matchup: 'TBD vs TBD', time: '6:00 PM', field: 'H1N' },
-          { matchup: 'TBD vs TBD', time: '7:30 PM', field: 'H1N' },
+          { gameNumber: '910', matchup: 'Winner of Game 902 vs Winner of Game 904', time: '6:00 PM', field: 'V2A' },
+          { gameNumber: '912', matchup: 'Winner of Game 906 vs Winner of Game 908', time: '7:30 PM', field: 'V2A' },
         ],
       },
       {
         round: 'Championship', date: 'May 16, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'TBD vs TBD', time: '10:00 AM', field: 'H1S' },
+          { gameNumber: '914', matchup: 'Winner of Game 910 vs Winner of Game 912', time: '9:00 AM', field: 'H3' },
         ],
       },
     ],
@@ -137,36 +105,69 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'First Round', date: 'May 5, 2026',
         games: [
-          { matchup: 'Seed 8 vs Seed 9',  time: '7:30 PM', location: 'Veterans Park', field: 'V1B' },
-          { matchup: 'Seed 1',            note: 'Bye' },
-          { matchup: 'Seed 4 vs Seed 13', time: '6:00 PM', location: 'Hebron Park',   field: 'H1S' },
-          { matchup: 'Seed 5 vs Seed 12', time: '7:30 PM', location: 'Hebron Park',   field: 'H1S' },
-          { matchup: 'Seed 7 vs Seed 10', time: '6:00 PM', location: 'Veterans Park', field: 'V1A' },
-          { matchup: 'Seed 2',            note: 'Bye' },
-          { matchup: 'Seed 3',            note: 'Bye' },
-          { matchup: 'Seed 6 vs Seed 11', time: '7:30 PM', location: 'Veterans Park', field: 'V1A' },
+          { gameNumber: '1101', matchup: 'Seed 8 vs Seed 9',  time: '7:30 PM', location: 'Veterans Park', field: 'V1B' },
+          { matchup: 'Seed 1', note: 'Bye' },
+          { gameNumber: '1103', matchup: 'Seed 4 vs Seed 13', time: '6:00 PM', location: 'Hebron Park',   field: 'H1S' },
+          { gameNumber: '1105', matchup: 'Seed 5 vs Seed 12', time: '7:30 PM', location: 'Hebron Park',   field: 'H1S' },
+          { gameNumber: '1107', matchup: 'Seed 7 vs Seed 10', time: '6:00 PM', location: 'Veterans Park', field: 'V1A' },
+          { matchup: 'Seed 2', note: 'Bye' },
+          { matchup: 'Seed 3', note: 'Bye' },
+          { gameNumber: '1109', matchup: 'Seed 6 vs Seed 11', time: '7:30 PM', location: 'Veterans Park', field: 'V1A' },
         ],
       },
       {
         round: 'Quarterfinals', date: 'May 9, 2026',
         games: [
-          { matchup: 'Seed 1 vs Winner R1', time: '12:00 PM', location: 'Hebron Park',   field: 'H1N' },
-          { matchup: 'TBD vs TBD',          time: '12:00 PM', location: 'Veterans Park', field: 'V1A' },
-          { matchup: 'Seed 2 vs Winner R1', time: '1:30 PM',  location: 'Hebron Park',   field: 'H1N' },
-          { matchup: 'Seed 3 vs Winner R1', time: '1:30 PM',  location: 'Veterans Park', field: 'V1A' },
+          { gameNumber: '1111', matchup: 'Seed 1 vs Winner of Game 1101', time: '12:00 PM', location: 'Hebron Park',   field: 'H1N' },
+          { gameNumber: '1113', matchup: 'Winner of Game 1103 vs Winner of Game 1105', time: '12:00 PM', location: 'Veterans Park', field: 'V1A' },
+          { gameNumber: '1115', matchup: 'Seed 2 vs Winner of Game 1107', time: '1:30 PM',  location: 'Hebron Park',   field: 'H1N' },
+          { gameNumber: '1117', matchup: 'Seed 3 vs Winner of Game 1109', time: '1:30 PM',  location: 'Veterans Park', field: 'V1A' },
         ],
       },
       {
         round: 'Semifinals', date: 'May 12, 2026', location: 'Veterans Park',
         games: [
-          { matchup: 'TBD vs TBD', time: '6:00 PM', field: 'V1A' },
-          { matchup: 'TBD vs TBD', time: '7:30 PM', field: 'V1A' },
+          { gameNumber: '1119', matchup: 'Winner of Game 1111 vs Winner of Game 1113', time: '6:00 PM', field: 'V1A' },
+          { gameNumber: '1121', matchup: 'Winner of Game 1115 vs Winner of Game 1117', time: '7:30 PM', field: 'V1A' },
         ],
       },
       {
         round: 'Championship', date: 'May 16, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'TBD vs TBD', time: '9:30 AM', field: 'H1N' },
+          { gameNumber: '1123', matchup: 'Winner of Game 1119 vs Winner of Game 1121', time: '9:30 AM', field: 'H1N' },
+        ],
+      },
+    ],
+  },
+  {
+    division: 'U11 Girls',
+    rounds: [
+      {
+        round: 'Play-in', date: 'May 5, 2026', location: 'Veterans Park',
+        games: [
+          { gameNumber: '1102', matchup: 'Seed 8 vs Seed 9', time: '6:00 PM', field: 'V1A' },
+        ],
+      },
+      {
+        round: 'Quarterfinals', date: 'May 9, 2026',
+        games: [
+          { gameNumber: '1104', matchup: 'Seed 1 vs Winner of Game 1102', time: '9:00 AM',  location: 'Hebron Park',   field: 'H1N' },
+          { gameNumber: '1106', matchup: 'Seed 4 vs Seed 5',              time: '9:00 AM',  location: 'Veterans Park', field: 'V1A' },
+          { gameNumber: '1108', matchup: 'Seed 2 vs Seed 7',              time: '10:30 AM', location: 'Hebron Park',   field: 'H1N' },
+          { gameNumber: '1110', matchup: 'Seed 3 vs Seed 6',              time: '10:30 AM', location: 'Veterans Park', field: 'V1A' },
+        ],
+      },
+      {
+        round: 'Semifinals', date: 'May 12, 2026', location: 'Hebron Park',
+        games: [
+          { gameNumber: '1112', matchup: 'Winner of Game 1104 vs Winner of Game 1106', time: '6:00 PM', field: 'H1N' },
+          { gameNumber: '1114', matchup: 'Winner of Game 1108 vs Winner of Game 1110', time: '7:30 PM', field: 'H1N' },
+        ],
+      },
+      {
+        round: 'Championship', date: 'May 16, 2026', location: 'Hebron Park',
+        games: [
+          { gameNumber: '1116', matchup: 'Winner of Game 1112 vs Winner of Game 1114', time: '10:00 AM', field: 'H1S' },
         ],
       },
     ],
@@ -177,45 +178,20 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'Play-in', date: 'May 9, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'Seed 4 vs Seed 5', time: '9:00 AM', field: 'H1S' },
+          { gameNumber: '601', matchup: 'Seed 4 vs Seed 5', time: '9:00 AM', field: 'H1S' },
         ],
       },
       {
         round: 'Semifinals', date: 'May 12, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'Seed 1 vs Play-in Winner', time: '6:00 PM', field: 'H1S' },
-          { matchup: 'Seed 2 vs Seed 3',         time: '7:30 PM', field: 'H1S' },
+          { gameNumber: '602', matchup: 'Seed 1 vs Winner of Game 601', time: '6:00 PM', field: 'H1S' },
+          { gameNumber: '603', matchup: 'Seed 2 vs Seed 3',             time: '7:30 PM', field: 'H1S' },
         ],
       },
       {
         round: 'Championship', date: 'May 16, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'TBD vs TBD', time: '11:00 AM', field: 'H1N' },
-        ],
-      },
-    ],
-  },
-  {
-    division: 'JV Girls',
-    rounds: [
-      {
-        round: 'First Round', date: 'May 9, 2026', location: 'Hebron Park',
-        games: [
-          { matchup: 'Seed 4 vs Seed 5', time: '10:30 AM', field: 'H1S' },
-          { matchup: 'Seed 3 vs Seed 6', time: '12:00 PM', field: 'H1S' },
-        ],
-      },
-      {
-        round: 'Semifinals', date: 'May 14, 2026', location: 'Hebron Park',
-        games: [
-          { matchup: 'Seed 1 vs Winner R1', time: '6:00 PM', field: 'H1N' },
-          { matchup: 'Seed 2 vs Winner R1', time: '7:30 PM', field: 'H1N' },
-        ],
-      },
-      {
-        round: 'Championship', date: 'May 16, 2026', location: 'Hebron Park',
-        games: [
-          { matchup: 'TBD vs TBD', time: '11:30 AM', field: 'H1S' },
+          { gameNumber: '604', matchup: 'Winner of Game 602 vs Winner of Game 603', time: '11:00 AM', field: 'H1N' },
         ],
       },
     ],
@@ -226,39 +202,46 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'First Round', date: 'May 9, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'Seed 4 vs Seed 5', time: '1:30 PM', field: 'H1S' },
-          { matchup: 'Seed 3 vs Seed 6', time: '3:00 PM', field: 'H1S' },
+          { gameNumber: '101', matchup: 'Seed 4 vs Seed 5', time: '1:30 PM', field: 'H1S' },
+          { gameNumber: '103', matchup: 'Seed 3 vs Seed 6', time: '3:00 PM', field: 'H1S' },
         ],
       },
       {
         round: 'Semifinals', date: 'May 12, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'Seed 1 vs Winner R1', time: '6:00 PM', field: 'H1N' },
-          { matchup: 'Seed 2 vs Winner R1', time: '7:30 PM', field: 'H1N' },
+          { gameNumber: '105', matchup: 'Seed 1 vs Winner of Game 101', time: '6:00 PM', field: 'H1N' },
+          { gameNumber: '107', matchup: 'Seed 2 vs Winner of Game 103', time: '7:30 PM', field: 'H1N' },
         ],
       },
       {
         round: 'Championship', date: 'May 16, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'TBD vs TBD', time: '12:30 PM', field: 'H1N' },
+          { gameNumber: '109', matchup: 'Winner of Game 105 vs Winner of Game 107', time: '12:30 PM', field: 'H1N' },
         ],
       },
     ],
   },
   {
-    division: 'Varsity Girls',
+    division: 'JV Girls',
     rounds: [
       {
-        round: 'Semifinals', date: 'May 9, 2026', location: 'Hebron Park',
+        round: 'First Round', date: 'May 9, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'Seed 3 vs Seed 2', time: '9:00 AM',  field: 'H2' },
-          { matchup: 'Seed 4 vs Seed 1', time: '11:00 AM', field: 'H2' },
+          { gameNumber: '201', matchup: 'Seed 4 vs Seed 5', time: '10:30 AM', field: 'H1S' },
+          { gameNumber: '203', matchup: 'Seed 3 vs Seed 6', time: '12:00 PM', field: 'H1S' },
+        ],
+      },
+      {
+        round: 'Semifinals', date: 'May 14, 2026', location: 'Hebron Park',
+        games: [
+          { gameNumber: '205', matchup: 'Seed 1 vs Winner of Game 201', time: '6:00 PM', field: 'H1N' },
+          { gameNumber: '207', matchup: 'Seed 2 vs Winner of Game 203', time: '7:30 PM', field: 'H1N' },
         ],
       },
       {
         round: 'Championship', date: 'May 16, 2026', location: 'Hebron Park',
         games: [
-          { matchup: 'TBD vs TBD', time: '9:00 AM', field: 'H2' },
+          { gameNumber: '209', matchup: 'Winner of Game 205 vs Winner of Game 207', time: '11:30 AM', field: 'H1S' },
         ],
       },
     ],
@@ -269,14 +252,32 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'Semifinals', date: 'May 12, 2026', location: 'Field 2',
         games: [
-          { matchup: 'Seed 3 vs Seed 2', time: '6:00 PM', field: 'Field 2' },
-          { matchup: 'Seed 4 vs Seed 1', time: '7:45 PM', field: 'Field 2' },
+          { gameNumber: '301', matchup: 'Seed 3 vs Seed 2', time: '6:00 PM', field: 'Field 2' },
+          { gameNumber: '303', matchup: 'Seed 4 vs Seed 1', time: '7:45 PM', field: 'Field 2' },
         ],
       },
       {
         round: 'Championship', date: 'May 16, 2026', location: 'Field 2',
         games: [
-          { matchup: 'TBD vs TBD', time: '11:00 AM', field: 'Field 2' },
+          { gameNumber: '305', matchup: 'Winner of Game 301 vs Winner of Game 303', time: '11:00 AM', field: 'Field 2' },
+        ],
+      },
+    ],
+  },
+  {
+    division: 'Varsity Girls',
+    rounds: [
+      {
+        round: 'Semifinals', date: 'May 9, 2026', location: 'Hebron Park',
+        games: [
+          { gameNumber: '401', matchup: 'Seed 3 vs Seed 2', time: '9:00 AM',  field: 'H2' },
+          { gameNumber: '403', matchup: 'Seed 4 vs Seed 1', time: '11:00 AM', field: 'H2' },
+        ],
+      },
+      {
+        round: 'Championship', date: 'May 16, 2026', location: 'Hebron Park',
+        games: [
+          { gameNumber: '405', matchup: 'Winner of Game 401 vs Winner of Game 403', time: '9:00 AM', field: 'H2' },
         ],
       },
     ],
@@ -287,14 +288,14 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'Semifinals', date: 'May 11, 2026', location: 'Field 2',
         games: [
-          { matchup: 'Seed 3 vs Seed 2', time: '6:00 PM', field: 'Field 2' },
-          { matchup: 'Seed 4 vs Seed 1', time: '8:00 PM', field: 'Field 2' },
+          { gameNumber: '501', matchup: 'Seed 3 vs Seed 2', time: '6:00 PM', field: 'Field 2' },
+          { gameNumber: '503', matchup: 'Seed 4 vs Seed 1', time: '8:00 PM', field: 'Field 2' },
         ],
       },
       {
         round: 'Championship', date: 'May 16, 2026', location: 'Field 2',
         games: [
-          { matchup: 'TBD vs TBD', time: '1:00 PM', field: 'Field 2' },
+          { gameNumber: '505', matchup: 'Winner of Game 501 vs Winner of Game 503', time: '1:00 PM', field: 'Field 2' },
         ],
       },
     ],
@@ -311,7 +312,6 @@ const ROUND_COLORS: Record<string, string> = {
 
 export default function PlayoffsPage() {
   const [activeDiv, setActiveDiv] = useState('U9 Boys')
-
   const divData = PLAYOFF_DATA.find(d => d.division === activeDiv)
 
   return (
@@ -324,9 +324,7 @@ export default function PlayoffsPage() {
           <h1 style={{ color: 'white', fontWeight: 700, fontSize: '20px', letterSpacing: '-0.3px', lineHeight: 1.2 }}>
             Rogers Youth Soccer &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Rogers Activity Center
           </h1>
-          <p style={{ color: 'white', fontSize: '12px', marginTop: '4px', opacity: 0.8 }}>
-            🌍 World Cup Season
-          </p>
+          <p style={{ color: 'white', fontSize: '12px', marginTop: '4px', opacity: 0.8 }}>🌍 World Cup Season</p>
         </div>
       </header>
 
@@ -337,48 +335,45 @@ export default function PlayoffsPage() {
             Standings &amp; Results
           </a>
           <a href="/playoffs" style={{ padding: '14px 16px', fontSize: '14px', fontWeight: 700, color: ROGERS_GREEN, textDecoration: 'none', borderBottom: `2px solid ${ROGERS_GREEN}` }}>
-            Playoffs
+            🏆 Playoffs
           </a>
         </div>
       </div>
 
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '32px 20px' }}>
 
-        {/* Page title */}
         <div style={{ marginBottom: '20px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#111827', margin: 0 }}>🏆 Spring 2026 Playoffs</h2>
           <p style={{ color: '#6b7280', fontSize: '14px', marginTop: '4px' }}>Single elimination · All divisions</p>
         </div>
 
-        {/* Disclaimer banner */}
+        {/* Disclaimer */}
         <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: '10px', padding: '14px 18px', marginBottom: '28px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
           <span style={{ fontSize: '20px', flexShrink: 0 }}>⚠️</span>
           <div>
             <p style={{ fontSize: '13px', fontWeight: 700, color: '#92400e', margin: 0 }}>Playoff Schedule — Dates &amp; Times Only</p>
             <p style={{ fontSize: '13px', color: '#92400e', marginTop: '4px', lineHeight: 1.5 }}>
-              The matchups listed below show the scheduled dates, times, and fields for each round. 
-              <strong> Team assignments are not finalized until after the last regular season game.</strong> Games listed as "TBD vs TBD" will be updated once seeding is confirmed. Please do not use this page to determine when your team plays — check back after the regular season ends.
+              The matchups below show scheduled dates, times, and fields for each round.
+              <strong> Team assignments are not finalized until after the last regular season game.</strong> Please do not use this page to determine when your team plays — check back after the regular season ends.
             </p>
           </div>
         </div>
 
         {/* Division tabs */}
-        <div style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {DIVISIONS.map(d => (
-              <button
-                key={d}
-                onClick={() => setActiveDiv(d)}
-                style={{
-                  padding: '7px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
-                  border: activeDiv === d ? 'none' : '1px solid #d1d5db',
-                  background: activeDiv === d ? ROGERS_GREEN : 'white',
-                  color: activeDiv === d ? 'white' : '#374151',
-                  boxShadow: activeDiv === d ? '0 2px 6px rgba(45,122,58,0.3)' : 'none',
-                }}
-              >{d}</button>
-            ))}
-          </div>
+        <div style={{ marginBottom: '24px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {DIVISIONS.map(d => (
+            <button
+              key={d}
+              onClick={() => setActiveDiv(d)}
+              style={{
+                padding: '7px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+                border: activeDiv === d ? 'none' : '1px solid #d1d5db',
+                background: activeDiv === d ? ROGERS_GREEN : 'white',
+                color: activeDiv === d ? 'white' : '#374151',
+                boxShadow: activeDiv === d ? '0 2px 6px rgba(45,122,58,0.3)' : 'none',
+              }}
+            >{d}</button>
+          ))}
         </div>
 
         {/* Rounds */}
@@ -390,7 +385,7 @@ export default function PlayoffsPage() {
               return (
                 <div key={ri} style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
                   {/* Round header */}
-                  <div style={{ padding: '14px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isChampionship ? '#fff7ed' : 'white' }}>
+                  <div style={{ padding: '14px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isChampionship ? '#fff7ed' : '#fafafa' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <span style={{ background: color, color: 'white', fontSize: '11px', fontWeight: 700, padding: '3px 10px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         {round.round}
@@ -404,63 +399,65 @@ export default function PlayoffsPage() {
                   </div>
 
                   {/* Games */}
-                  <div>
-                    {round.games.map((game, gi) => {
-                      const isBye = !!game.note
-                      const isTBD = game.matchup === 'TBD vs TBD'
-                      return (
-                        <div
-                          key={gi}
-                          style={{
-                            padding: '14px 20px',
-                            borderBottom: gi < round.games.length - 1 ? '1px solid #f9fafb' : 'none',
-                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                            background: isBye ? '#f9fafb' : 'white',
-                            opacity: isBye ? 0.6 : 1,
-                          }}
-                        >
-                          {/* Matchup */}
-                          <div style={{ flex: 1 }}>
-                            {isBye ? (
-                              <p style={{ fontSize: '14px', color: '#9ca3af', fontStyle: 'italic', margin: 0 }}>
-                                {game.matchup} — Bye
-                              </p>
-                            ) : isTBD ? (
-                              <p style={{ fontSize: '14px', color: '#9ca3af', fontStyle: 'italic', margin: 0 }}>
-                                TBD vs TBD
-                              </p>
-                            ) : (
-                              <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', margin: 0 }}>
-                                {game.matchup}
-                              </p>
-                            )}
-                          </div>
-
-                          {/* Time / field / location */}
-                          {!isBye && (
-                            <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                              {game.date && <p style={{ fontSize: '11px', color: '#9ca3af', margin: 0 }}>{game.date}</p>}
-                              {game.time && <p style={{ fontSize: '13px', fontWeight: 600, color: '#374151', margin: 0 }}>{game.time}</p>}
-                              <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end', marginTop: '2px' }}>
-                                {game.location && <span style={{ fontSize: '11px', color: '#9ca3af' }}>{game.location}</span>}
-                                {game.field && (
-                                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'white', background: color, padding: '1px 7px', borderRadius: '10px' }}>
-                                    {game.field}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
+                  {round.games.map((game, gi) => {
+                    const isBye = !!game.note
+                    return (
+                      <div
+                        key={gi}
+                        style={{
+                          padding: '14px 20px',
+                          borderBottom: gi < round.games.length - 1 ? '1px solid #f3f4f6' : 'none',
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px',
+                          background: isBye ? '#fafafa' : 'white',
+                          opacity: isBye ? 0.55 : 1,
+                        }}
+                      >
+                        {/* Game number badge */}
+                        <div style={{ flexShrink: 0, minWidth: '52px' }}>
+                          {game.gameNumber && !isBye && (
+                            <span style={{ fontSize: '11px', fontWeight: 700, color: color, background: `${color}15`, border: `1px solid ${color}40`, padding: '2px 8px', borderRadius: '10px' }}>
+                              #{game.gameNumber}
+                            </span>
                           )}
                         </div>
-                      )
-                    })}
-                  </div>
+
+                        {/* Matchup */}
+                        <div style={{ flex: 1 }}>
+                          {isBye ? (
+                            <p style={{ fontSize: '14px', color: '#9ca3af', fontStyle: 'italic', margin: 0 }}>
+                              {game.matchup} — Bye (advances automatically)
+                            </p>
+                          ) : (
+                            <p style={{ fontSize: '14px', fontWeight: 600, color: '#111827', margin: 0 }}>
+                              {game.matchup}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Time / field */}
+                        {!isBye && (
+                          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                            {game.date && <p style={{ fontSize: '11px', color: '#9ca3af', margin: 0 }}>{game.date}</p>}
+                            {game.time && <p style={{ fontSize: '13px', fontWeight: 600, color: '#374151', margin: 0 }}>{game.time}</p>}
+                            <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end', marginTop: '2px' }}>
+                              {game.location && <span style={{ fontSize: '11px', color: '#9ca3af' }}>{game.location}</span>}
+                              {game.field && (
+                                <span style={{ fontSize: '11px', fontWeight: 600, color: 'white', background: color, padding: '1px 7px', borderRadius: '10px' }}>
+                                  {game.field}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
               )
             })}
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '40px', color: '#9ca3af' }}>No playoff data found for this division.</div>
+          <p style={{ textAlign: 'center', color: '#9ca3af', padding: '40px' }}>No playoff data found.</p>
         )}
       </div>
 
