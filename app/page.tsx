@@ -52,22 +52,54 @@ function computeStandings(games: Game[]): StandingsRow[] {
   const ensure = (team: string, flag: string) => {
     if (!map[team]) map[team] = { team, flag, gp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 }
   }
-  for (const g of games) {
-    if (!g.counts_for_standings || g.is_cancelled) continue
-    if (g.home_score === null || g.away_score === null) continue
+
+  const validGames = games.filter(g =>
+    g.counts_for_standings && !g.is_cancelled &&
+    g.home_score !== null && g.away_score !== null
+  )
+
+  for (const g of validGames) {
     ensure(g.home_team, g.home_flag)
     ensure(g.away_team, g.away_flag)
     const h = map[g.home_team]
     const a = map[g.away_team]
-    h.gp++; h.gf += g.home_score; h.ga += g.away_score; h.gd = h.gf - h.ga
-    a.gp++; a.gf += g.away_score; a.ga += g.home_score; a.gd = a.gf - a.ga
-    if (g.home_score > g.away_score) { h.w++; h.pts += 3; a.l++ }
-    else if (g.home_score < g.away_score) { a.w++; a.pts += 3; h.l++ }
+    h.gp++; h.gf += g.home_score!; h.ga += g.away_score!; h.gd = h.gf - h.ga
+    a.gp++; a.gf += g.away_score!; a.ga += g.home_score!; a.gd = a.gf - a.ga
+    if (g.home_score! > g.away_score!) { h.w++; h.pts += 3; a.l++ }
+    else if (g.home_score! < g.away_score!) { a.w++; a.pts += 3; h.l++ }
     else { h.d++; h.pts++; a.d++; a.pts++ }
   }
-  return Object.values(map).sort((a, b) =>
-    b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || a.ga - b.ga
-  )
+
+  const rows = Object.values(map)
+
+  function headToHeadPts(team: string, tiedGroup: string[]): number {
+    let pts = 0
+    for (const g of validGames) {
+      if (!tiedGroup.includes(g.home_team) || !tiedGroup.includes(g.away_team)) continue
+      if (g.home_team === team) {
+        if (g.home_score! > g.away_score!) pts += 3
+        else if (g.home_score! === g.away_score!) pts += 1
+      } else if (g.away_team === team) {
+        if (g.away_score! > g.home_score!) pts += 3
+        else if (g.away_score! === g.home_score!) pts += 1
+      }
+    }
+    return pts
+  }
+
+  rows.sort((a, b) => {
+    if (b.pts !== a.pts) return b.pts - a.pts
+    const tiedGroup = rows.filter(r => r.pts === a.pts).map(r => r.team)
+    if (tiedGroup.length > 1) {
+      const h2hDiff = headToHeadPts(b.team, tiedGroup) - headToHeadPts(a.team, tiedGroup)
+      if (h2hDiff !== 0) return h2hDiff
+    }
+    if (a.ga !== b.ga) return a.ga - b.ga
+    if (b.gd !== a.gd) return b.gd - a.gd
+    return b.gf - a.gf
+  })
+
+  return rows
 }
 
 function formatDate(dateStr: string | null, timeStr: string | null): string {
