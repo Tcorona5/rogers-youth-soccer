@@ -80,25 +80,6 @@ export default function PlayoffsPage() {
   const [games, setGames] = useState<PlayoffGame[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Load flag map once from regular season games
-  useEffect(() => {
-    const loadFlags = async () => {
-      const { data } = await supabase
-        .from('games')
-        .select('home_team, home_flag, away_team, away_flag')
-        .limit(1000)
-      if (data) {
-        const map: Record<string, string> = {}
-        for (const g of data) {
-          if (g.home_team && g.home_flag) map[g.home_team.trim()] = g.home_flag
-          if (g.away_team && g.away_flag) map[g.away_team.trim()] = g.away_flag
-        }
-        setFlagMap(map)
-      }
-    }
-    loadFlags()
-  }, [])
-
   useEffect(() => {
     const load = async () => {
       setLoading(true)
