@@ -219,13 +219,21 @@ export default function PlayoffsPage() {
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <p style={{ fontSize: '13px', fontWeight: 600, color: '#374151', margin: 0 }}>
-                        {grouped[round][0]?.game_date}
+                        {(() => {
+                          const dates = [...new Set(grouped[round].map(g => g.game_date).filter(Boolean))]
+                          if (dates.length === 1) return dates[0]
+                          const sorted = dates.sort()
+                          return `${sorted[0]} – ${sorted[sorted.length - 1]}`
+                        })()}
                       </p>
-                      {grouped[round][0]?.location && (
-                        <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0, marginTop: '2px' }}>
-                          {grouped[round][0].location}
-                        </p>
-                      )}
+                      {(() => {
+                        const locations = [...new Set(grouped[round].map(g => g.location).filter(Boolean))]
+                        return locations.length > 0 ? (
+                          <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0, marginTop: '2px' }}>
+                            {locations.length === 1 ? locations[0] : 'Multiple Locations'}
+                          </p>
+                        ) : null
+                      })()}
                     </div>
                   </div>
 
