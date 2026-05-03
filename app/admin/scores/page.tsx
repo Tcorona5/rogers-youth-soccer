@@ -132,6 +132,7 @@ export default function AdminScores() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <a href="/admin/playoffs" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', textDecoration: 'none' }}>🏆 Playoff Scores</a>
           <a href="/" target="_blank" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', textDecoration: 'none' }}>View Site →</a>
           <button
             onClick={() => { sessionStorage.removeItem('rys_admin'); router.replace('/admin/login') }}
