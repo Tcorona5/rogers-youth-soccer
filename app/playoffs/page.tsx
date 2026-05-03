@@ -158,10 +158,10 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
         ],
       },
       {
-        round: 'Semifinals', date: 'May 12, 2026', location: 'Hebron Park',
+        round: 'Semifinals', date: 'May 14, 2026', location: 'Hebron Park',
         games: [
-          { gameNumber: '1112', matchup: 'Winner of Game 1104 vs Winner of Game 1106', time: '6:00 PM', field: 'H1N' },
-          { gameNumber: '1114', matchup: 'Winner of Game 1108 vs Winner of Game 1110', time: '7:30 PM', field: 'H1N' },
+          { gameNumber: '1112', matchup: 'Winner of Game 1104 vs Winner of Game 1106', time: '6:00 PM', field: 'H1S' },
+          { gameNumber: '1114', matchup: 'Winner of Game 1108 vs Winner of Game 1110', time: '7:30 PM', field: 'H1S' },
         ],
       },
       {
