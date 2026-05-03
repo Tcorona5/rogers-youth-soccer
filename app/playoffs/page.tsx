@@ -4,6 +4,34 @@ import { supabase } from '../../lib/supabase'
 
 const ROGERS_GREEN = '#2D7A3A'
 
+function flagEmojiToCode(emoji: string): string {
+  if (!emoji) return ''
+  try {
+    const codePoints = Array.from(emoji).map(c => c.codePointAt(0)! - 0x1F1E6)
+    if (codePoints.length < 2 || codePoints[0] < 0 || codePoints[1] < 0) return ''
+    return String.fromCharCode(65 + codePoints[0], 65 + codePoints[1]).toLowerCase()
+  } catch { return '' }
+}
+
+const NAME_FLAG_OVERRIDES: Record<string, string> = {
+  'England': 'gb-eng', 'Scotland': 'gb-sct', 'Wales': 'gb-wls',
+}
+
+function FlagImg({ emoji, name = '', size = 22 }: { emoji: string; name?: string; size?: number }) {
+  const overrideKey = Object.keys(NAME_FLAG_OVERRIDES).find(k => name.includes(k))
+  const code = (overrideKey ? NAME_FLAG_OVERRIDES[overrideKey] : null) || flagEmojiToCode(emoji)
+  if (!code) return null
+  return (
+    <img
+      src={`https://flagcdn.com/w40/${code}.png`}
+      alt={name || code}
+      width={size}
+      height={Math.round(size * 0.67)}
+      style={{ objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }}
+    />
+  )
+}
+
 const DIVISIONS = [
   { slug: 'u9b',  name: 'U9 Boys' },
   { slug: 'u9g',  name: 'U9 Girls' },
@@ -43,12 +71,33 @@ type PlayoffGame = {
   winner: string | null
   next_game_number: string | null
   next_game_slot: string | null
+  home_flag: string
+  away_flag: string
 }
 
 export default function PlayoffsPage() {
   const [activeDiv, setActiveDiv] = useState('u9b')
   const [games, setGames] = useState<PlayoffGame[]>([])
   const [loading, setLoading] = useState(true)
+
+  // Load flag map once from regular season games
+  useEffect(() => {
+    const loadFlags = async () => {
+      const { data } = await supabase
+        .from('games')
+        .select('home_team, home_flag, away_team, away_flag')
+        .limit(1000)
+      if (data) {
+        const map: Record<string, string> = {}
+        for (const g of data) {
+          if (g.home_team && g.home_flag) map[g.home_team.trim()] = g.home_flag
+          if (g.away_team && g.away_flag) map[g.away_team.trim()] = g.away_flag
+        }
+        setFlagMap(map)
+      }
+    }
+    loadFlags()
+  }, [])
 
   useEffect(() => {
     const load = async () => {
@@ -235,7 +284,7 @@ export default function PlayoffsPage() {
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px' }}>
                           {/* Home */}
-                          <div style={{ flex: 1, textAlign: 'right' }}>
+                          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
                             <span style={{
                               fontSize: '15px',
                               fontWeight: isPlayed && game.winner === game.home_team ? 700 : 500,
@@ -244,6 +293,7 @@ export default function PlayoffsPage() {
                             }}>
                               {homeKnown ? game.home_team : 'TBD'}
                             </span>
+                            {homeKnown && <FlagImg emoji={game.home_flag || ''} name={game.home_team} size={22} />}
                           </div>
 
                           {/* VS divider */}
@@ -252,7 +302,8 @@ export default function PlayoffsPage() {
                           </div>
 
                           {/* Away */}
-                          <div style={{ flex: 1 }}>
+                          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            {awayKnown && <FlagImg emoji={game.away_flag || ''} name={game.away_team} size={22} />}
                             <span style={{
                               fontSize: '15px',
                               fontWeight: isPlayed && game.winner === game.away_team ? 700 : 500,
