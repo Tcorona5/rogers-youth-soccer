@@ -145,7 +145,7 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'Play-in', date: 'May 5, 2026', location: 'Veterans Park',
         games: [
-          { gameNumber: '1102', matchup: 'Seed 8 vs Seed 9', time: '6:00 PM', field: 'V1A' },
+          { gameNumber: '1102', matchup: 'Seed 8 vs Seed 9', time: '6:00 PM', location: 'Veterans Park', field: 'V1B' },
         ],
       },
       {
