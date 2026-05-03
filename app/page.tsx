@@ -235,6 +235,31 @@ function StandingsTable({ standings }: { standings: StandingsRow[] }) {
       <div style={{ padding: "24px 24px 0 24px" }}>
         <h2 style={{ fontSize: "22px", fontWeight: 700, color: "#111827" }}>Standings</h2>
         <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "2px" }}>Win 3 pts · Draw 1 pt · Loss 0 pts</p>
+
+        {/* Tiebreaker info box */}
+        <div style={{ marginTop: "16px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "10px", padding: "16px 18px" }}>
+          <p style={{ fontSize: "13px", fontWeight: 700, color: "#166534", margin: "0 0 8px 0" }}>Tiebreaker Procedures</p>
+          <p style={{ fontSize: "12px", color: "#166534", margin: "0 0 10px 0", lineHeight: 1.6, fontStyle: "italic" }}>
+            If two or more teams finish the regular season with the same number of points, the following tiebreakers are applied in order to determine final seeding:
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "10px" }}>
+            <p style={{ fontSize: "12px", color: "#166534", margin: 0, lineHeight: 1.6 }}>
+              <strong>1. Head to Head</strong> — The result of the game(s) played directly between the tied teams. If those teams did not play each other, or if that game ended in a draw, we move to the next tiebreaker.
+            </p>
+            <p style={{ fontSize: "12px", color: "#166534", margin: 0, lineHeight: 1.6 }}>
+              <strong>2. Fewest Goals Allowed</strong> — The team that gave up fewer goals throughout the season earns the higher seed. We believe strong defense is just as important as scoring.
+            </p>
+            <p style={{ fontSize: "12px", color: "#166534", margin: 0, lineHeight: 1.6 }}>
+              <strong>3. Goal Differential</strong> — Total goals scored minus total goals allowed. A positive number means more goals scored than allowed.
+            </p>
+            <p style={{ fontSize: "12px", color: "#166534", margin: 0, lineHeight: 1.6 }}>
+              <strong>4. Goals Scored</strong> — The team that scored the most goals throughout the season earns the higher seed.
+            </p>
+          </div>
+          <p style={{ fontSize: "12px", color: "#166534", margin: 0, lineHeight: 1.6, fontStyle: "italic" }}>
+            A note on sportsmanship: We intentionally place goals scored last in our tiebreaker order. Running up the score against an opponent is never necessary and goes against the spirit of this league. We ask all coaches and players to compete with integrity, especially as the regular season comes to a close. Let the game speak for itself.
+          </p>
+        </div>
       </div>
 
       <div className="overflow-x-auto">
