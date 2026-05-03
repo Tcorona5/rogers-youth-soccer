@@ -18,8 +18,7 @@ const NAME_FLAG_OVERRIDES: Record<string, string> = {
   'England': 'gb-eng', 'Scotland': 'gb-sct', 'Wales': 'gb-wls',
 }
 
-function FlagImg({ name, flagMap, size = 20 }: { name: string; flagMap: Record<string, string>; size?: number }) {
-  const emoji = flagMap[name] || ''
+function FlagImg({ emoji, name = '', size = 20 }: { emoji: string; name?: string; size?: number }) {
   const overrideKey = Object.keys(NAME_FLAG_OVERRIDES).find(k => name.includes(k))
   const code = (overrideKey ? NAME_FLAG_OVERRIDES[overrideKey] : null) || flagEmojiToCode(emoji)
   if (!code) return null
