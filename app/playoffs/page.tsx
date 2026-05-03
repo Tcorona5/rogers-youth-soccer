@@ -38,22 +38,22 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'First Round', date: 'May 4–5, 2026', location: 'Veterans Park',
         games: [
-          { gameNumber: '901', matchup: 'Seed 8 vs Seed 9',  date: 'May 4', time: '6:00 PM',  field: 'V2A' },
-          { matchup: 'Seed 1', note: 'Bye' },
-          { gameNumber: '903', matchup: 'Seed 4 vs Seed 13', date: 'May 5', time: '6:00 PM',  field: 'V2A' },
-          { gameNumber: '905', matchup: 'Seed 5 vs Seed 12', date: 'May 5', time: '7:30 PM',  field: 'V2A' },
-          { gameNumber: '907', matchup: 'Seed 7 vs Seed 10', date: 'May 4', time: '7:30 PM',  field: 'V2A' },
-          { matchup: 'Seed 2', note: 'Bye' },
-          { gameNumber: '909', matchup: 'Seed 3 vs Seed 14', date: 'May 5', time: '6:00 PM',  field: 'V2B' },
-          { gameNumber: '911', matchup: 'Seed 6 vs Seed 11', date: 'May 5', time: '7:30 PM',  field: 'V2B' },
+          { gameNumber: '901', matchup: 'Switzerland vs USA',  date: 'May 4', time: '6:00 PM',  field: 'V2A' },
+          { matchup: 'Mexico', note: 'Bye' },
+          { gameNumber: '903', matchup: 'Tunisia vs Netherlands', date: 'May 5', time: '6:00 PM',  field: 'V2A' },
+          { gameNumber: '905', matchup: 'Uruguay vs Japan', date: 'May 5', time: '7:30 PM',  field: 'V2A' },
+          { gameNumber: '907', matchup: 'Ecuador vs Curacao', date: 'May 4', time: '7:30 PM',  field: 'V2A' },
+          { matchup: 'Canada', note: 'Bye' },
+          { gameNumber: '909', matchup: 'Norway vs Australia', date: 'May 5', time: '6:00 PM',  field: 'V2B' },
+          { gameNumber: '911', matchup: 'Brazil vs South Korea', date: 'May 5', time: '7:30 PM',  field: 'V2B' },
         ],
       },
       {
         round: 'Quarterfinals', date: 'May 9, 2026', location: 'Veterans Park',
         games: [
-          { gameNumber: '913', matchup: 'Seed 1 vs Winner of Game 901', time: '9:00 AM',  field: 'V2A' },
+          { gameNumber: '913', matchup: 'Mexico vs Winner of Game 901', time: '9:00 AM',  field: 'V2A' },
           { gameNumber: '915', matchup: 'Winner of Game 903 vs Winner of Game 905', time: '10:30 AM', field: 'V2A' },
-          { gameNumber: '917', matchup: 'Seed 2 vs Winner of Game 907', time: '12:00 PM', field: 'V2A' },
+          { gameNumber: '917', matchup: 'Canada vs Winner of Game 907', time: '12:00 PM', field: 'V2A' },
           { gameNumber: '919', matchup: 'Winner of Game 909 vs Winner of Game 911', time: '1:30 PM',  field: 'V2A' },
         ],
       },
@@ -78,10 +78,10 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'Quarterfinals', date: 'May 9, 2026', location: 'Veterans Park',
         games: [
-          { gameNumber: '902', matchup: 'Seed 1 vs Seed 8', time: '9:00 AM',  field: 'V2B' },
-          { gameNumber: '904', matchup: 'Seed 4 vs Seed 5', time: '10:30 AM', field: 'V2B' },
-          { gameNumber: '906', matchup: 'Seed 3 vs Seed 6', time: '12:00 PM', field: 'V2B' },
-          { gameNumber: '908', matchup: 'Seed 2 vs Seed 7', time: '1:30 PM',  field: 'V2B' },
+          { gameNumber: '902', matchup: 'South Korea vs Argentina', time: '9:00 AM',  field: 'V2B' },
+          { gameNumber: '904', matchup: 'Netherlands vs Mexico', time: '10:30 AM', field: 'V2B' },
+          { gameNumber: '906', matchup: 'USA vs Brazil', time: '12:00 PM', field: 'V2B' },
+          { gameNumber: '908', matchup: 'Cape Verde vs Canada', time: '1:30 PM',  field: 'V2B' },
         ],
       },
       {
@@ -105,23 +105,23 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'First Round', date: 'May 5, 2026',
         games: [
-          { gameNumber: '1101', matchup: 'Seed 8 vs Seed 9',  time: '7:30 PM', location: 'Veterans Park', field: 'V1B' },
-          { matchup: 'Seed 1', note: 'Bye' },
-          { gameNumber: '1103', matchup: 'Seed 4 vs Seed 13', time: '6:00 PM', location: 'Hebron Park',   field: 'H1S' },
-          { gameNumber: '1105', matchup: 'Seed 5 vs Seed 12', time: '7:30 PM', location: 'Hebron Park',   field: 'H1S' },
-          { gameNumber: '1107', matchup: 'Seed 7 vs Seed 10', time: '6:00 PM', location: 'Veterans Park', field: 'V1A' },
-          { matchup: 'Seed 2', note: 'Bye' },
-          { matchup: 'Seed 3', note: 'Bye' },
-          { gameNumber: '1109', matchup: 'Seed 6 vs Seed 11', time: '7:30 PM', location: 'Veterans Park', field: 'V1A' },
+          { gameNumber: '1101', matchup: 'Brazil vs Uzbekistan',  time: '7:30 PM', location: 'Veterans Park', field: 'V1B' },
+          { matchup: 'Canada', note: 'Bye' },
+          { gameNumber: '1103', matchup: 'Scotland vs Germany', time: '6:00 PM', location: 'Hebron Park',   field: 'H1S' },
+          { gameNumber: '1105', matchup: 'Mexico vs Argentina', time: '7:30 PM', location: 'Hebron Park',   field: 'H1S' },
+          { gameNumber: '1107', matchup: 'USA vs Japan', time: '6:00 PM', location: 'Veterans Park', field: 'V1A' },
+          { matchup: 'Canada', note: 'Bye' },
+          { matchup: 'France', note: 'Bye' },
+          { gameNumber: '1109', matchup: 'Tunisia vs England', time: '7:30 PM', location: 'Veterans Park', field: 'V1A' },
         ],
       },
       {
         round: 'Quarterfinals', date: 'May 9, 2026',
         games: [
-          { gameNumber: '1111', matchup: 'Seed 1 vs Winner of Game 1101', time: '12:00 PM', location: 'Hebron Park',   field: 'H1N' },
+          { gameNumber: '1111', matchup: 'Canada vs Winner of Game 1101', time: '12:00 PM', location: 'Hebron Park',   field: 'H1N' },
           { gameNumber: '1113', matchup: 'Winner of Game 1103 vs Winner of Game 1105', time: '12:00 PM', location: 'Veterans Park', field: 'V1A' },
-          { gameNumber: '1115', matchup: 'Seed 2 vs Winner of Game 1107', time: '1:30 PM',  location: 'Hebron Park',   field: 'H1N' },
-          { gameNumber: '1117', matchup: 'Seed 3 vs Winner of Game 1109', time: '1:30 PM',  location: 'Veterans Park', field: 'V1A' },
+          { gameNumber: '1115', matchup: 'Colombia vs Winner of Game 1107', time: '1:30 PM',  location: 'Hebron Park',   field: 'H1N' },
+          { gameNumber: '1117', matchup: 'France vs Winner of Game 1109', time: '1:30 PM',  location: 'Veterans Park', field: 'V1A' },
         ],
       },
       {
@@ -145,16 +145,16 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'Play-in', date: 'May 5, 2026', location: 'Veterans Park',
         games: [
-          { gameNumber: '1102', matchup: 'Seed 8 vs Seed 9', time: '6:00 PM', location: 'Veterans Park', field: 'V1B' },
+          { gameNumber: '1102', matchup: 'Brazil vs USA', time: '6:00 PM', location: 'Veterans Park', field: 'V1B' },
         ],
       },
       {
         round: 'Quarterfinals', date: 'May 9, 2026',
         games: [
-          { gameNumber: '1104', matchup: 'Seed 1 vs Winner of Game 1102', time: '9:00 AM',  location: 'Hebron Park',   field: 'H1N' },
-          { gameNumber: '1106', matchup: 'Seed 4 vs Seed 5',              time: '9:00 AM',  location: 'Veterans Park', field: 'V1A' },
-          { gameNumber: '1108', matchup: 'Seed 2 vs Seed 7',              time: '10:30 AM', location: 'Hebron Park',   field: 'H1N' },
-          { gameNumber: '1110', matchup: 'Seed 3 vs Seed 6',              time: '10:30 AM', location: 'Veterans Park', field: 'V1A' },
+          { gameNumber: '1104', matchup: 'France vs Winner of Game 1102', time: '9:00 AM',  location: 'Hebron Park',   field: 'H1N' },
+          { gameNumber: '1106', matchup: 'Norway vs Portugal',              time: '9:00 AM',  location: 'Veterans Park', field: 'V1A' },
+          { gameNumber: '1108', matchup: 'Ghana vs Mexico',              time: '10:30 AM', location: 'Hebron Park',   field: 'H1N' },
+          { gameNumber: '1110', matchup: 'South Africa vs Canada',              time: '10:30 AM', location: 'Veterans Park', field: 'V1A' },
         ],
       },
       {
@@ -202,15 +202,15 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'First Round', date: 'May 9, 2026', location: 'Hebron Park',
         games: [
-          { gameNumber: '101', matchup: 'Seed 4 vs Seed 5', time: '1:30 PM', field: 'H1S' },
-          { gameNumber: '103', matchup: 'Seed 3 vs Seed 6', time: '3:00 PM', field: 'H1S' },
+          { gameNumber: '101', matchup: 'Canada vs United States', time: '1:30 PM', field: 'H1S' },
+          { gameNumber: '103', matchup: 'Portugal 2 vs Mexico', time: '3:00 PM', field: 'H1S' },
         ],
       },
       {
         round: 'Semifinals', date: 'May 12, 2026', location: 'Hebron Park',
         games: [
-          { gameNumber: '105', matchup: 'Seed 1 vs Winner of Game 101', time: '6:00 PM', field: 'H1N' },
-          { gameNumber: '107', matchup: 'Seed 2 vs Winner of Game 103', time: '7:30 PM', field: 'H1N' },
+          { gameNumber: '105', matchup: 'Portugal 1 vs Winner of Game 101', time: '6:00 PM', field: 'H1N' },
+          { gameNumber: '107', matchup: 'Morocco vs Winner of Game 103', time: '7:30 PM', field: 'H1N' },
         ],
       },
       {
@@ -227,15 +227,15 @@ const PLAYOFF_DATA: DivisionSchedule[] = [
       {
         round: 'First Round', date: 'May 9, 2026', location: 'Hebron Park',
         games: [
-          { gameNumber: '201', matchup: 'Seed 4 vs Seed 5', time: '10:30 AM', field: 'H1S' },
-          { gameNumber: '203', matchup: 'Seed 3 vs Seed 6', time: '12:00 PM', field: 'H1S' },
+          { gameNumber: '201', matchup: 'Ghana vs United States', time: '10:30 AM', field: 'H1S' },
+          { gameNumber: '203', matchup: 'Brazil vs Argentina', time: '12:00 PM', field: 'H1S' },
         ],
       },
       {
         round: 'Semifinals', date: 'May 14, 2026', location: 'Hebron Park',
         games: [
-          { gameNumber: '205', matchup: 'Seed 1 vs Winner of Game 201', time: '6:00 PM', field: 'H1N' },
-          { gameNumber: '207', matchup: 'Seed 2 vs Winner of Game 203', time: '7:30 PM', field: 'H1N' },
+          { gameNumber: '205', matchup: 'Mexico vs Winner of Game 201', time: '6:00 PM', field: 'H1N' },
+          { gameNumber: '207', matchup: 'Canada vs Winner of Game 203', time: '7:30 PM', field: 'H1N' },
         ],
       },
       {
