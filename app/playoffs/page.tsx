@@ -137,12 +137,14 @@ export default function PlayoffsPage() {
         {/* Disclaimer */}
         <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: '10px', padding: '20px 24px', marginBottom: '28px' }}>
           <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '20px' }}>
-            <span style={{ fontSize: '20px', flexShrink: 0 }}>⚠️</span>
+            <span style={{ fontSize: '20px', flexShrink: 0 }}>🏆</span>
             <div>
-              <p style={{ fontSize: '14px', fontWeight: 700, color: '#92400e', margin: 0 }}>Playoff Schedule — Dates &amp; Times Only</p>
+              <p style={{ fontSize: '14px', fontWeight: 700, color: '#92400e', margin: 0 }}>Playoff Schedule</p>
               <p style={{ fontSize: '13px', color: '#92400e', marginTop: '4px', lineHeight: 1.6 }}>
-                The matchups below show scheduled dates, times, and fields for each round.
-                <strong> Team assignments are not finalized until after the last regular season game.</strong> Please do not use this page to determine when your team plays — check back after the regular season ends.
+                The regular season has ended and the end of season tournament has begun! Please see the matchups below. This is a single elimination tournament. The bracket will be updated as results come in.
+              </p>
+              <p style={{ fontSize: '13px', fontWeight: 700, color: '#92400e', marginTop: '8px' }}>
+                Good luck to all our teams this postseason! 🌍⚽
               </p>
             </div>
           </div>
