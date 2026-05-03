@@ -5,6 +5,31 @@ import { supabase } from '../../../lib/supabase'
 
 const ROGERS_GREEN = '#2D7A3A'
 
+function flagEmojiToCode(emoji: string): string {
+  if (!emoji) return ''
+  try {
+    const codePoints = Array.from(emoji).map(c => c.codePointAt(0)! - 0x1F1E6)
+    if (codePoints.length < 2 || codePoints[0] < 0 || codePoints[1] < 0) return ''
+    return String.fromCharCode(65 + codePoints[0], 65 + codePoints[1]).toLowerCase()
+  } catch { return '' }
+}
+
+const NAME_FLAG_OVERRIDES: Record<string, string> = {
+  'England': 'gb-eng', 'Scotland': 'gb-sct', 'Wales': 'gb-wls',
+}
+
+function FlagImg({ name, flagMap, size = 20 }: { name: string; flagMap: Record<string, string>; size?: number }) {
+  const emoji = flagMap[name] || ''
+  const overrideKey = Object.keys(NAME_FLAG_OVERRIDES).find(k => name.includes(k))
+  const code = (overrideKey ? NAME_FLAG_OVERRIDES[overrideKey] : null) || flagEmojiToCode(emoji)
+  if (!code) return null
+  return (
+    <img src={`https://flagcdn.com/w40/${code}.png`} alt={name}
+      width={size} height={Math.round(size * 0.67)}
+      style={{ objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }} />
+  )
+}
+
 const DIVISIONS = [
   { slug: 'u9b',  name: 'U9 Boys' },
   { slug: 'u9g',  name: 'U9 Girls' },
@@ -43,6 +68,8 @@ type PlayoffGame = {
   winner: string | null
   next_game_number: string | null
   next_game_slot: string | null
+  home_flag: string
+  away_flag: string
 }
 
 export default function AdminPlayoffs() {
@@ -90,11 +117,13 @@ export default function AdminPlayoffs() {
       .update({ home_score: hs, away_score: as_, winner: winner || null })
       .eq('id', game.id)
 
-    // If there's a winner and a next game, advance them
+    // If there's a winner and a next game, advance them including flag
     if (winner && game.next_game_number) {
-      const slot = game.next_game_slot === 'home' ? 'home_team' : 'away_team'
+      const teamSlot = game.next_game_slot === 'home' ? 'home_team' : 'away_team'
+      const flagSlot = game.next_game_slot === 'home' ? 'home_flag' : 'away_flag'
+      const winnerFlag = winner === game.home_team ? (game.home_flag || '') : (game.away_flag || '')
       await supabase.from('playoff_games')
-        .update({ [slot]: winner })
+        .update({ [teamSlot]: winner, [flagSlot]: winnerFlag })
         .eq('game_number', game.next_game_number)
         .eq('division_slug', game.division_slug)
     }
@@ -121,11 +150,12 @@ export default function AdminPlayoffs() {
       .update({ home_score: null, away_score: null, winner: null })
       .eq('id', game.id)
 
-    // Clear the team from the next game slot
+    // Clear the team and flag from the next game slot
     if (game.winner && game.next_game_number) {
-      const slot = game.next_game_slot === 'home' ? 'home_team' : 'away_team'
+      const teamSlot = game.next_game_slot === 'home' ? 'home_team' : 'away_team'
+      const flagSlot = game.next_game_slot === 'home' ? 'home_flag' : 'away_flag'
       await supabase.from('playoff_games')
-        .update({ [slot]: '' })
+        .update({ [teamSlot]: '', [flagSlot]: '' })
         .eq('game_number', game.next_game_number)
         .eq('division_slug', game.division_slug)
     }
@@ -254,13 +284,14 @@ export default function AdminPlayoffs() {
                         {/* Score row */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                           {/* Home */}
-                          <div style={{ flex: 1, textAlign: 'right' }}>
+                          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
                             <span style={{
                               fontSize: '15px', fontWeight: game.winner === game.home_team ? 700 : 500,
                               color: game.winner ? (game.winner === game.home_team ? '#111827' : '#9ca3af') : '#374151'
                             }}>
                               {game.home_team || <span style={{ color: '#d1d5db', fontStyle: 'italic' }}>TBD</span>}
                             </span>
+                            {game.home_team && <FlagImg emoji={game.home_flag || ''} name={game.home_team} size={20} />}
                           </div>
 
                           {/* Center */}
@@ -319,7 +350,8 @@ export default function AdminPlayoffs() {
                           </div>
 
                           {/* Away */}
-                          <div style={{ flex: 1 }}>
+                          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            {game.away_team && <FlagImg emoji={game.away_flag || ''} name={game.away_team} size={20} />}
                             <span style={{
                               fontSize: '15px', fontWeight: game.winner === game.away_team ? 700 : 500,
                               color: game.winner ? (game.winner === game.away_team ? '#111827' : '#9ca3af') : '#374151'
