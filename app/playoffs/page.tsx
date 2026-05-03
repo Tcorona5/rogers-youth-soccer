@@ -207,6 +207,21 @@ export default function PlayoffsPage() {
             {sortedRounds.map(round => {
               const color = ROUND_COLORS[round] || ROGERS_GREEN
               const isChampionship = round === 'Championship'
+
+              // Build reverse lookup: which games feed into each game slot
+              const feedsInto: Record<string, { home?: string; away?: string }> = {}
+              for (const g of games) {
+                if (g.next_game_number) {
+                  if (!feedsInto[g.next_game_number]) feedsInto[g.next_game_number] = {}
+                  if (g.next_game_slot === 'home') feedsInto[g.next_game_number].home = g.game_number
+                  if (g.next_game_slot === 'away') feedsInto[g.next_game_number].away = g.game_number
+                }
+              }
+
+              // Group games by date within this round
+              const gameDates = grouped[round].map(g => g.game_date).filter(Boolean)
+              const uniqueDates = gameDates.filter((d, i) => gameDates.indexOf(d) === i).sort()
+
               return (
                 <div key={round} style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
                   {/* Round header */}
@@ -218,19 +233,11 @@ export default function PlayoffsPage() {
                       {isChampionship && <span style={{ fontSize: '16px' }}>🏆</span>}
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <p style={{ fontSize: '13px', fontWeight: 600, color: '#374151', margin: 0 }}>
-                        {(() => {
-                          const allDates = grouped[round].map(g => g.game_date).filter(Boolean)
-                          const dates = allDates.filter((d, i) => allDates.indexOf(d) === i).sort()
-                          if (dates.length === 1) return dates[0]
-                          return `${dates[0]} – ${dates[dates.length - 1]}`
-                        })()}
-                      </p>
                       {(() => {
                         const allLocs = grouped[round].map(g => g.location).filter(Boolean)
                         const locations = allLocs.filter((l, i) => allLocs.indexOf(l) === i)
                         return locations.length > 0 ? (
-                          <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0, marginTop: '2px' }}>
+                          <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0 }}>
                             {locations.length === 1 ? locations[0] : 'Multiple Locations'}
                           </p>
                         ) : null
@@ -238,72 +245,98 @@ export default function PlayoffsPage() {
                     </div>
                   </div>
 
-                  {/* Games */}
-                  {grouped[round].map((game, gi) => {
-                    const homeKnown = !!game.home_team
-                    const awayKnown = !!game.away_team
-                    const isPlayed = !!game.winner
-
+                  {/* Games grouped by date */}
+                  {uniqueDates.map(date => {
+                    const dateGames = grouped[round].filter(g => g.game_date === date)
                     return (
-                      <div
-                        key={game.id}
-                        style={{
-                          padding: '14px 20px',
-                          borderBottom: gi < grouped[round].length - 1 ? '1px solid #f3f4f6' : 'none',
-                          background: isPlayed ? '#f9fafb' : 'white',
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                            <span style={{ fontSize: '11px', fontWeight: 700, color: color, background: `${color}15`, border: `1px solid ${color}40`, padding: '2px 8px', borderRadius: '10px' }}>
-                              #{game.game_number}
-                            </span>
-                            {game.game_time && <span style={{ fontSize: '12px', color: '#9ca3af' }}>{game.game_time}</span>}
-                            {game.field && (
-                              <span style={{ fontSize: '11px', fontWeight: 600, color: 'white', background: color, padding: '1px 7px', borderRadius: '10px' }}>
-                                {game.field}
-                              </span>
-                            )}
-                          </div>
-                          {isPlayed && (
-                            <span style={{ fontSize: '12px', fontWeight: 600, color: '#16a34a' }}>
-                              ✓ {game.winner} advances
-                            </span>
-                          )}
+                      <div key={date}>
+                        {/* Date sub-header */}
+                        <div style={{ padding: '8px 20px', background: '#f8fafc', borderBottom: '1px solid #f3f4f6', borderTop: '1px solid #f3f4f6' }}>
+                          <p style={{ fontSize: '12px', fontWeight: 700, color: '#374151', margin: 0 }}>{date}</p>
                         </div>
+                        {dateGames.map((game, gi) => {
+                          const homeKnown = !!game.home_team
+                          const awayKnown = !!game.away_team
+                          const isPlayed = !!game.winner
+                          const feeds = feedsInto[game.game_number] || {}
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px' }}>
-                          {/* Home */}
-                          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
-                            <span style={{
-                              fontSize: '15px',
-                              fontWeight: isPlayed && game.winner === game.home_team ? 700 : 500,
-                              color: isPlayed ? (game.winner === game.home_team ? '#111827' : '#9ca3af') : (homeKnown ? '#111827' : '#d1d5db'),
-                              fontStyle: homeKnown ? 'normal' : 'italic',
-                            }}>
-                              {homeKnown ? game.home_team : 'TBD'}
-                            </span>
-                            {homeKnown && <FlagImg emoji={game.home_flag || ''} name={game.home_team} size={22} />}
-                          </div>
+                          const homeLabel = homeKnown
+                            ? game.home_team
+                            : feeds.home
+                              ? `Winner of Game ${feeds.home}`
+                              : 'TBD'
+                          const awayLabel = awayKnown
+                            ? game.away_team
+                            : feeds.away
+                              ? `Winner of Game ${feeds.away}`
+                              : 'TBD'
 
-                          {/* VS divider */}
-                          <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px' }}>
-                            <span style={{ fontSize: '13px', color: '#d1d5db', fontWeight: 300 }}>vs</span>
-                          </div>
+                          const homeIsWinner = homeKnown && isPlayed && game.winner === game.home_team
+                          const awayIsWinner = awayKnown && isPlayed && game.winner === game.away_team
 
-                          {/* Away */}
-                          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            {awayKnown && <FlagImg emoji={game.away_flag || ''} name={game.away_team} size={22} />}
-                            <span style={{
-                              fontSize: '15px',
-                              fontWeight: isPlayed && game.winner === game.away_team ? 700 : 500,
-                              color: isPlayed ? (game.winner === game.away_team ? '#111827' : '#9ca3af') : (awayKnown ? '#111827' : '#d1d5db'),
-                              fontStyle: awayKnown ? 'normal' : 'italic',
-                            }}>
-                              {awayKnown ? game.away_team : 'TBD'}
-                            </span>
-                          </div>
-                        </div>
+                          return (
+                            <div
+                              key={game.id}
+                              style={{
+                                padding: '14px 20px',
+                                borderBottom: gi < dateGames.length - 1 ? '1px solid #f3f4f6' : 'none',
+                                background: isPlayed ? '#f9fafb' : 'white',
+                              }}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                  <span style={{ fontSize: '11px', fontWeight: 700, color: color, background: `${color}15`, border: `1px solid ${color}40`, padding: '2px 8px', borderRadius: '10px' }}>
+                                    #{game.game_number}
+                                  </span>
+                                  {game.game_time && <span style={{ fontSize: '12px', color: '#9ca3af' }}>{game.game_time}</span>}
+                                  {game.field && (
+                                    <span style={{ fontSize: '11px', fontWeight: 600, color: 'white', background: color, padding: '1px 7px', borderRadius: '10px' }}>
+                                      {game.field}
+                                    </span>
+                                  )}
+                                </div>
+                                {isPlayed && (
+                                  <span style={{ fontSize: '12px', fontWeight: 600, color: '#16a34a' }}>
+                                    ✓ {game.winner} advances
+                                  </span>
+                                )}
+                              </div>
+
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px' }}>
+                                {/* Home */}
+                                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
+                                  <span style={{
+                                    fontSize: homeKnown ? '15px' : '13px',
+                                    fontWeight: homeIsWinner ? 700 : 500,
+                                    color: isPlayed ? (homeIsWinner ? '#111827' : '#9ca3af') : (homeKnown ? '#111827' : '#9ca3af'),
+                                    fontStyle: homeKnown ? 'normal' : 'italic',
+                                  }}>
+                                    {homeLabel}
+                                  </span>
+                                  {homeKnown && <FlagImg emoji={game.home_flag || ''} name={game.home_team} size={22} />}
+                                </div>
+
+                                {/* VS */}
+                                <div style={{ flexShrink: 0, width: '40px', textAlign: 'center' }}>
+                                  <span style={{ fontSize: '13px', color: '#d1d5db', fontWeight: 300 }}>vs</span>
+                                </div>
+
+                                {/* Away */}
+                                <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  {awayKnown && <FlagImg emoji={game.away_flag || ''} name={game.away_team} size={22} />}
+                                  <span style={{
+                                    fontSize: awayKnown ? '15px' : '13px',
+                                    fontWeight: awayIsWinner ? 700 : 500,
+                                    color: isPlayed ? (awayIsWinner ? '#111827' : '#9ca3af') : (awayKnown ? '#111827' : '#9ca3af'),
+                                    fontStyle: awayKnown ? 'normal' : 'italic',
+                                  }}>
+                                    {awayLabel}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        })}
                       </div>
                     )
                   })}
